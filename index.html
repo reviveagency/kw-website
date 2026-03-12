@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KontrolWater — KW100 Intelligent Pool Management</title>
+
+  <!--
+  ASSET REFERENCES
+  ──────────────────────────────────────────
+  VIDEO:  kwvideotest.mp4  (scroll-scrubbed journey)
+  LOGO:   .claude/KW_Logo.png
+  SPECS:  .claude/KW100 Setup Measures.png  (rendered inverted)
+
+  Scroll-video chapters (0.0–1.0):
+    01 Surface        0.00–0.14
+    02 Threshold      0.14–0.28
+    03 Descent        0.28–0.43
+    04 Network        0.43–0.57
+    05 System         0.57–0.72
+    06 Intelligence   0.72–0.86
+    07 Return         0.86–1.00
+  Adjust CHAPTERS array in JS after reviewing video.
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+
+  <style>
+    /* ─── TOKENS ──────────────────────────────────────── */
+    :root {
+      --black:        #000000;
+      --white:        #FFFFFF;
+      --gray-1:       rgba(255,255,255,0.72);
+      --gray-2:       rgba(255,255,255,0.42);
+      --gray-3:       rgba(255,255,255,0.18);
+      --gray-4:       rgba(255,255,255,0.07);
+      --border:       rgba(255,255,255,0.10);
+      --border-faint: rgba(255,255,255,0.055);
+
+      /* Blue — only for CTAs */
+      --blue:         #0F62FE;
+      --blue-hover:   #0353E9;
+
+      --font:         'IBM Plex Sans', system-ui, sans-serif;
+      --mono:         'DM Mono', 'Courier New', monospace;
+
+      --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-io:      cubic-bezier(0.65, 0, 0.35, 1);
+
+      --max:          1320px;
+      --pad:          72px;
+    }
+
+    /* ─── RESET ───────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font);
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    img, video { display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── LAYOUT ──────────────────────────────────────── */
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 var(--pad);
+    }
+
+    /* ─── SCROLL REVEAL ───────────────────────────────── */
+    .sr {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.85s var(--ease-out), transform 0.85s var(--ease-out);
+    }
+    .sr.in-view { opacity: 1; transform: none; }
+
+    /* Stagger siblings — JS adds delay via style attribute */
+    .sr-stagger { transition-delay: var(--stagger-delay, 0ms); }
+
+    /* Count-up numbers — .counting class shows the animated value */
+    .count-num[data-target] { font-variant-numeric: tabular-nums; }
+
+    /* ─── LABEL UTILITY ───────────────────────────────── */
+    .label {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      line-height: 1;
+    }
+
+    /* ─── CTA BUTTONS ─────────────────────────────────── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--blue);
+      color: var(--white);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 14px 28px;
+      transition: background 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary:hover { background: var(--blue-hover); }
+    .btn-primary svg { flex-shrink: 0; }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      color: var(--gray-1);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      padding: 13px 27px;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, color 0.2s;
+      cursor: pointer;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.28); color: var(--white); }
+
+    /* ─────────────────────────────────────────────────────
+       NAV
+    ─────────────────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      padding: 0 var(--pad);
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.45s var(--ease-out), border-color 0.45s;
+      border-bottom: 1px solid transparent;
+    }
+    .nav.filled {
+      background: rgba(0,0,0,0.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom-color: var(--border-faint);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    /* LOGO IMAGE — swap src to change */
+    .nav-logo img {
+      height: 32px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: var(--gray-2);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-cta {
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      background: var(--blue);
+      color: var(--white);
+      padding: 9px 20px;
+      letter-spacing: 0.02em;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--blue-hover); }
+
+    /* ─────────────────────────────────────────────────────
+       HERO — video background, text overlay
+    ─────────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* Autoplay background video */
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    /* Overlay so text stays readable */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.15) 100%);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 var(--pad) 96px;
+      max-width: var(--max);
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .hero-h1 {
+      font-size: clamp(48px, 6.5vw, 96px);
+      font-weight: 600;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      max-width: 14ch;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fade-up 1s 0.2s var(--ease-out) forwards;
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--gray-1);
+      max-width: 44ch;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fade-up 1s 0.45s var(--ease-out) forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      opacity: 0;
+      animation: fade-up 1s 0.65s var(--ease-out) forwards;
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* Scroll hint */
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      right: var(--pad);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fade-up 1s 1s var(--ease-out) forwards;
+    }
+    .hero-scroll-hint span {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      writing-mode: vertical-rl;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 56px;
+      background: var(--gray-3);
+      position: relative;
+      overflow: hidden;
+    }
+    .scroll-line::after {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 1px;
+      height: 100%;
+      background: rgba(255,255,255,0.5);
+      animation: line-drop 2s var(--ease-out) infinite;
+    }
+    @keyframes line-drop {
+      0%   { top: -100%; }
+      100% { top: 200%; }
+    }
+
+    /* ─────────────────────────────────────────────────────
+       INTRO STATEMENT
+    ─────────────────────────────────────────────────────── */
+    .intro {
+      padding: 140px var(--pad);
+    }
+    .intro-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: center;
+    }
+    .intro-h2 {
+      font-size: clamp(32px, 3.5vw, 52px);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+      color: var(--white);
+    }
+    .intro-body {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--gray-2);
+    }
+    .intro-body p + p { margin-top: 18px; }
+    .intro-rule {
+      width: 100%;
+      height: 1px;
+      background: var(--border-faint);
+      margin-bottom: 36px;
+    }
+
+    /* ─────────────────────────────────────────────────────
+       KEY METRICS BAR
+    ─────────────────────────────────────────────────────── */
+    .metrics {
+      border-top: 1px solid var(--border-faint);
+      border-bottom: 1px solid var(--border-faint);
+      margin-bottom: 150px;
+    }
+    .metrics-grid {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .metric-cell {
+      background: var(--black);
+      padding: 52px 48px;
+      transition: background 0.2s;
+      border-right: 1px solid var(--border-faint);
+    }
+    .metric-cell:last-child { border-right: none; }
+    .metric-cell:hover { background: rgba(255,255,255,0.03); }
+    .metric-value {
+      font-size: clamp(48px, 5.5vw, 80px);
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .metric-sup {
+      font-family: var(--mono);
+      font-size: 18px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.38);
+      vertical-align: super;
+      letter-spacing: 0;
+      margin-left: 8px;
+    }
+    .metric-label {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--gray-1);
+      margin-bottom: 6px;
+    }
+    .metric-desc {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+    }
+
+    /* ─────────────────────────────────────────────────────
+       TESTIMONIALS
+    ─────────────────────────────────────────────────────── */
+    .testimonials {
+      padding: 120px var(--pad);
+      border-top: 1px solid var(--border-faint);
+    }
+    .testimonials-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+    .testimonials-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 60px;
+      margin-bottom: 72px;
+    }
+    .testimonials-h2 {
+      font-size: clamp(28px, 3vw, 44px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      max-width: 22ch;
+    }
+    .testimonials-sub {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--gray-2);
+      max-width: 36ch;
+      flex-shrink: 0;
+    }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border-faint);
+    }
+    .testimonial-card {
+      background: var(--black);
+      padding: 48px 44px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .testimonial-stars {
+      display: flex;
+      gap: 4px;
+    }
+    .testimonial-stars span {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--blue);
+      opacity: 0.7;
+    }
+    .testimonial-quote {
+      font-size: 15px;
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.75;
+      color: var(--gray-1);
+      flex: 1;
+    }
+    .testimonial-author {
+      border-top: 1px solid var(--border-faint);
+      padding-top: 24px;
+    }
+    .testimonial-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .testimonial-role {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+    }
+
+    /* ─────────────────────────────────────────────────────
+       SETUP MEASURES — scroll-driven blueprint reveal
+    ─────────────────────────────────────────────────────── */
+    .setup {
+      height: 300vh; /* scroll distance = drawing speed */
+      position: relative;
+      border-top: 1px solid var(--border-faint);
+      border-bottom: 1px solid var(--border-faint);
+    }
+    .setup-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px var(--pad);
+    }
+    .setup-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      width: 100%;
+    }
+    .setup-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: end;
+      margin-bottom: 52px;
+    }
+    .setup-header h2 {
+      font-size: clamp(28px, 3vw, 44px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+    }
+    .setup-header p {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--gray-2);
+    }
+    /* Blueprint diagram — JS drives clip-path via scroll */
+    .setup-diagram {
+      width: 100%;
+      display: block;
+      filter: invert(1) brightness(0.92);
+      border: 1px solid var(--border-faint);
+      clip-path: inset(0 0 100% 0); /* starts fully hidden */
+    }
+
+    /* Typewriter cursor */
+    .tw-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 0.9em;
+      background: var(--white);
+      margin-left: 3px;
+      vertical-align: middle;
+      animation: blink 0.85s step-end infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* ─────────────────────────────────────────────────────
+       NUMBERS / SPECS
+    ─────────────────────────────────────────────────────── */
+    .numbers {
+      padding: 120px var(--pad);
+    }
+    .numbers-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+    .numbers-label {
+      margin-bottom: 60px;
+    }
+    .numbers-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border-faint);
+    }
+    .num-cell {
+      background: var(--black);
+      padding: 48px 36px;
+      transition: background 0.25s;
+    }
+    .num-cell:hover { background: rgba(255,255,255,0.03); }
+    .num-value {
+      font-size: clamp(44px, 5vw, 72px);
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .num-unit {
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--gray-3);
+      vertical-align: super;
+      margin-left: 2px;
+    }
+    .num-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      margin-bottom: 16px;
+    }
+    .num-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--gray-2);
+    }
+
+    /* ─────────────────────────────────────────────────────
+       DIFFERENTIATION TABLE
+    ─────────────────────────────────────────────────────── */
+    .diff {
+      height: 380vh;
+      position: relative;
+      border-top: 1px solid var(--border-faint);
+    }
+    .diff-inner {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px var(--pad);
+      overflow: hidden;
+      max-width: 100%;
+    }
+    .diff-content {
+      max-width: var(--max);
+      margin: 0 auto;
+      width: 100%;
+    }
+    .diff-h2 {
+      font-size: clamp(32px, 3.5vw, 52px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      margin-bottom: 72px;
+      max-width: 20ch;
+    }
+    .diff-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .diff-table thead tr {
+      border-bottom: 1px solid var(--border);
+    }
+    .diff-table th {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.52);
+      padding: 0 0 18px;
+      text-align: left;
+      font-weight: 400;
+    }
+    .diff-table th:not(:first-child) { text-align: center; }
+    .diff-table tbody tr {
+      border-bottom: 1px solid var(--border-faint);
+    }
+    /* Individual row scroll reveal */
+    .diff-row-sr {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+    }
+    .diff-row-sr.in-view {
+      opacity: 1;
+      transform: none;
+    }
+    .diff-table td {
+      padding: 22px 0;
+      font-size: 14px;
+      color: var(--gray-2);
+      vertical-align: middle;
+    }
+    .diff-table td:not(:first-child) { text-align: center; }
+    .diff-table td.kw-val {
+      color: var(--white);
+      font-weight: 500;
+    }
+    .check {
+      display: inline-block;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      line-height: 18px;
+      text-align: center;
+      font-size: 10px;
+    }
+    .check.yes { background: var(--white); color: var(--black); }
+    .check.no  { background: rgba(255,255,255,0.04); color: var(--gray-3); }
+
+    /* ─────────────────────────────────────────────────────
+       HOW IT WORKS — scroll-driven reveal + SVG diagram
+    ─────────────────────────────────────────────────────── */
+    .how {
+      height: 420vh; /* extended — card 3 needs reading time */
+      position: relative;
+      background: var(--blue);
+      border-top: 1px solid rgba(255,255,255,0.12);
+    }
+    .how-sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow: hidden; /* clip canvas */
+      background: var(--blue);
+    }
+    .how-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 var(--pad);
+      width: 100%;
+    }
+    .how-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: end;
+      margin-bottom: 60px;
+    }
+    .how-h2 {
+      font-size: clamp(32px, 3.5vw, 52px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: var(--white);
+    }
+    .how-sub {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.72);
+    }
+    /* Steps grid — SVG positioned behind */
+    .how-steps {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border-faint);
+    }
+    /* Each step starts hidden; JS adds .step-active */
+    .how-step {
+      background: var(--black);
+      padding: 52px 44px;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 1s var(--ease-out), transform 1s var(--ease-out);
+    }
+    .how-step.step-active {
+      opacity: 1;
+      transform: none;
+    }
+    .step-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      color: var(--gray-3);
+      margin-bottom: 32px;
+    }
+    .step-title {
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: -0.015em;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .step-body {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--gray-2);
+    }
+
+    /* ── Particle canvas — behind the sticky panel ── */
+    .how-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* Cards — transparent on blue, only text visible */
+    .how-step {
+      background: transparent !important;
+    }
+    .how-step .step-num   { color: rgba(255,255,255,0.45); }
+    .how-step .step-title { color: var(--white); }
+    .how-step .step-body  { color: rgba(255,255,255,0.72); }
+    /* Transparent gap between cards */
+    .how-steps { background: transparent; }
+
+    /* ── Filtering status label ── */
+    .how-filtering {
+      position: absolute;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.85);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+      z-index: 2;
+      white-space: nowrap;
+    }
+    .how-filtering.visible { opacity: 1; }
+    .how-filtering-spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 1.5px solid rgba(255,255,255,0.25);
+      border-top-color: rgba(255,255,255,0.9);
+      border-radius: 50%;
+      animation: hf-spin 0.8s linear infinite;
+      opacity: 1;
+      transition: opacity 0.45s ease;
+    }
+    .how-filtering-check {
+      display: inline-block;
+      font-size: 13px;
+      line-height: 1;
+      opacity: 0;
+      transition: opacity 0.45s ease 0.25s; /* staggered — fades in after spinner fades out */
+    }
+    .how-filtering.done .how-filtering-spinner { opacity: 0; }
+    .how-filtering.done .how-filtering-check   { opacity: 1; }
+    @keyframes hf-spin {
+      to { transform: rotate(360deg); }
+    }
+
+
+    /* ─────────────────────────────────────────────────────
+       CTA SECTION
+    ─────────────────────────────────────────────────────── */
+    .cta-section {
+      padding: 140px var(--pad);
+    }
+    .cta-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 80px;
+    }
+    .cta-h2 {
+      font-size: clamp(36px, 4vw, 60px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: var(--white);
+      max-width: 18ch;
+    }
+    .cta-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    /* ─────────────────────────────────────────────────────
+       FOOTER
+    ─────────────────────────────────────────────────────── */
+    .footer {
+      border-top: 1px solid var(--border-faint);
+      padding: 56px var(--pad);
+    }
+    .footer-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+    }
+    .footer-logo img {
+      height: 28px;
+      width: auto;
+    }
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--gray-3);
+    }
+    .footer-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 12px;
+      color: var(--gray-3);
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gray-1); }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       NAV
+  ═══════════════════════════════════════════════ -->
+  <nav class="nav" id="nav">
+    <a href="#" class="nav-logo">
+      <!-- LOGO — swap src to update -->
+      <img src=".claude/KW-white.png" alt="KontrolWater" />
+    </a>
+    <ul class="nav-links">
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#specifications">Specifications</a></li>
+      <li><a href="#compare">Compare</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Request a Demo</a>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════
+       HERO — autoplay video background
+  ═══════════════════════════════════════════════ -->
+  <section class="hero" id="home">
+    <!-- Video background — swap src to change -->
+    <video class="hero-video" src="kwvideotest.mp4"
+      autoplay muted loop playsinline webkit-playsinline
+      aria-hidden="true"></video>
+
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <h1 class="hero-h1">
+        Intelligent pool management.<br />Zero effort.
+      </h1>
+      <p class="hero-sub">
+        KW100 monitors, adjusts, and maintains your pool autonomously — 24 hours a day, without human intervention.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">
+          Request a Demo
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="#how-it-works" class="btn-ghost">See How It Works</a>
+      </div>
+    </div>
+
+    <div class="hero-scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       INTRO STATEMENT
+  ═══════════════════════════════════════════════ -->
+  <section class="intro">
+    <div class="intro-inner">
+      <div class="sr">
+        <div class="intro-rule"></div>
+        <span class="label">About KW100</span>
+      </div>
+      <div></div>
+    </div>
+    <div style="max-width: var(--max); margin: 48px auto 0; padding: 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 100px; padding: 0 0;">
+      <h2 class="intro-h2" id="tw-heading" data-text="The pool manages itself. You enjoy it." style="visibility:hidden"></h2>
+      <div class="intro-body sr">
+        <p>
+          Traditional pool systems require constant manual attention — testing, adjusting chemicals, cleaning filters, monitoring pumps. KW100 replaces all of that with a single, self-contained intelligent unit.
+        </p>
+        <p>
+          Installed directly into your existing plumbing, KW100 continuously reads water chemistry, flow rate, temperature, and filter pressure. It responds in real time — no schedules, no guesswork, no service calls.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       KEY METRICS
+  ═══════════════════════════════════════════════ -->
+  <section class="metrics">
+    <div class="metrics-grid">
+      <div class="metric-cell sr sr-stagger" style="--stagger-delay: 0ms">
+        <div class="metric-value"><span class="count-num" data-target="70" data-suffix="%">0</span><span class="metric-sup">%</span></div>
+        <div class="metric-label">Reduction in chemical spend</div>
+        <div class="metric-desc">Avg. across installed sites</div>
+      </div>
+      <div class="metric-cell sr sr-stagger" style="--stagger-delay: 120ms">
+        <div class="metric-value"><span class="count-num" data-target="24" data-static="/7">0</span><span class="metric-sup">/7</span></div>
+        <div class="metric-label">Autonomous monitoring</div>
+        <div class="metric-desc">No manual intervention required</div>
+      </div>
+      <div class="metric-cell sr sr-stagger" style="--stagger-delay: 240ms">
+        <div class="metric-value"><span class="count-num" data-target="40" data-suffix="%">0</span><span class="metric-sup">%</span></div>
+        <div class="metric-label">Energy savings</div>
+        <div class="metric-desc">Via optimised pump scheduling</div>
+      </div>
+      <div class="metric-cell sr sr-stagger" style="--stagger-delay: 360ms">
+        <div class="metric-value"><span class="count-num" data-target="99" data-suffix="%">0</span><span class="metric-sup">%</span></div>
+        <div class="metric-label">System uptime</div>
+        <div class="metric-desc">Across the installed fleet</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       HOW IT WORKS — scroll-driven + SVG diagram
+  ═══════════════════════════════════════════════ -->
+  <section class="how" id="how-it-works">
+    <div class="how-sticky">
+      <!-- Particle canvas — sits behind everything in the sticky panel -->
+      <canvas id="how-canvas" class="how-canvas" aria-hidden="true"></canvas>
+
+      <div class="how-inner">
+        <div class="how-header">
+          <h2 class="how-h2 sr">Autonomous. Precise. Uninterrupted.</h2>
+          <p class="how-sub sr">
+            Three core functions operating simultaneously, every second of every day.
+          </p>
+        </div>
+
+        <div class="how-steps">
+          <!-- ── Feature cards ── -->
+          <div class="how-step" data-step="1">
+            <div class="step-num">01</div>
+            <div class="step-title">Continuous Sensing</div>
+            <p class="step-body">
+              Embedded probes measure pH, ORP, temperature, conductivity, and flow at 10-second intervals. No manual testing. No estimation.
+            </p>
+          </div>
+          <div class="how-step" data-step="2">
+            <div class="step-num">02</div>
+            <div class="step-title">Intelligent Dosing</div>
+            <p class="step-body">
+              KW100 calculates the precise chemical correction required and doses automatically via peristaltic pumps — accurate to within 0.01 pH.
+            </p>
+          </div>
+          <div class="how-step" data-step="3">
+            <div class="step-num">03</div>
+            <div class="step-title">Predictive Alerts</div>
+            <p class="step-body">
+              Machine learning models identify degradation patterns before they manifest. Maintenance teams receive alerts before there is a problem to solve.
+            </p>
+          </div>
+        </div><!-- .how-steps -->
+      </div><!-- .how-inner -->
+
+      <!-- Filtering status — appears when vacuum starts -->
+      <div class="how-filtering" id="how-filtering" aria-live="polite">
+        <span class="how-filtering-spinner"></span>
+        <span class="how-filtering-check">✓</span>
+        <span class="how-filtering-label">Filtering</span>
+      </div>
+    </div><!-- .how-sticky -->
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       KW100 SETUP MEASURES — scroll-drawn blueprint
+  ═══════════════════════════════════════════════ -->
+  <section class="setup" id="specifications">
+    <div class="setup-sticky">
+      <div class="setup-inner">
+        <div class="setup-header">
+          <h2 class="sr">KW100 Setup &amp; Dimensions</h2>
+          <p class="sr">
+            Designed for seamless integration with existing pool plant rooms. Compatible with all major filter and pump configurations. Installation requires no structural modifications.
+          </p>
+        </div>
+        <!-- SETUP DIAGRAM — revealed by scroll, inverted for dark background -->
+        <img
+          class="setup-diagram"
+          id="setupDiagram"
+          src=".claude/KW100 Setup Measures.png"
+          alt="KW100 installation dimensions and setup diagram"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       NUMBERS
+  ═══════════════════════════════════════════════ -->
+  <section class="numbers">
+    <div class="numbers-inner">
+      <div class="numbers-label sr">
+        <span class="label">Technical Performance</span>
+      </div>
+      <div class="numbers-grid">
+        <div class="num-cell sr sr-stagger" style="--stagger-delay: 0ms">
+          <div class="num-label">Measurement interval</div>
+          <div class="num-value"><span class="count-num" data-target="10">0</span><span class="num-unit">sec</span></div>
+          <p class="num-desc">Continuous water quality sampling — not hourly snapshots.</p>
+        </div>
+        <div class="num-cell sr sr-stagger" style="--stagger-delay: 120ms">
+          <div class="num-label">Dosing accuracy</div>
+          <div class="num-value">±0.01<span class="num-unit">pH</span></div>
+          <p class="num-desc">Peristaltic pump precision exceeds any manual dosing method.</p>
+        </div>
+        <div class="num-cell sr sr-stagger" style="--stagger-delay: 240ms">
+          <div class="num-label">Installation time</div>
+          <div class="num-value">&lt;<span class="count-num" data-target="4">0</span><span class="num-unit">hrs</span></div>
+          <p class="num-desc">Inline integration with existing plumbing. No structural work.</p>
+        </div>
+        <div class="num-cell sr sr-stagger" style="--stagger-delay: 360ms">
+          <div class="num-label">Parameters monitored</div>
+          <div class="num-value"><span class="count-num" data-target="12">0</span><span class="num-unit">+</span></div>
+          <p class="num-desc">pH, ORP, TDS, temperature, pressure, flow rate, and more.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       DIFFERENTIATION TABLE
+  ═══════════════════════════════════════════════ -->
+  <section class="diff" id="compare">
+    <div class="diff-inner">
+      <div class="diff-content">
+        <h2 class="diff-h2"
+          id="diff-tw-heading"
+          data-text="Why KW100 outperforms traditional pool management."
+          style="visibility:hidden"></h2>
+        <table class="diff-table">
+          <thead>
+            <tr>
+              <th style="width: 45%;">Capability</th>
+              <th>KW100</th>
+              <th>Traditional System</th>
+              <th>Manual Management</th>
+            </tr>
+          </thead>
+          <tbody id="diff-rows">
+            <tr class="diff-row-sr">
+              <td>Continuous water monitoring</td>
+              <td class="kw-val"><span class="check yes">✓</span></td>
+              <td><span class="check no">—</span></td>
+              <td><span class="check no">—</span></td>
+            </tr>
+            <tr class="diff-row-sr">
+              <td>Automatic chemical dosing</td>
+              <td class="kw-val"><span class="check yes">✓</span></td>
+              <td>Partial</td>
+              <td><span class="check no">—</span></td>
+            </tr>
+            <tr class="diff-row-sr">
+              <td>Predictive maintenance alerts</td>
+              <td class="kw-val"><span class="check yes">✓</span></td>
+              <td><span class="check no">—</span></td>
+              <td><span class="check no">—</span></td>
+            </tr>
+            <tr class="diff-row-sr">
+              <td>Remote monitoring via app</td>
+              <td class="kw-val"><span class="check yes">✓</span></td>
+              <td>Limited</td>
+              <td><span class="check no">—</span></td>
+            </tr>
+            <tr class="diff-row-sr">
+              <td>Retrofits existing plumbing</td>
+              <td class="kw-val"><span class="check yes">✓</span></td>
+              <td><span class="check yes">✓</span></td>
+              <td>N/A</td>
+            </tr>
+            <tr class="diff-row-sr">
+              <td>No ongoing service visits required</td>
+              <td class="kw-val"><span class="check yes">✓</span></td>
+              <td><span class="check no">—</span></td>
+              <td><span class="check no">—</span></td>
+            </tr>
+            <tr class="diff-row-sr">
+              <td>Chemical consumption reduction</td>
+              <td class="kw-val">Up to 40%</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       TESTIMONIALS
+  ═══════════════════════════════════════════════ -->
+  <section class="testimonials">
+    <div class="testimonials-inner">
+      <div class="testimonials-header">
+        <h2 class="testimonials-h2 sr">Trusted by operators who demand more from their pools.</h2>
+        <p class="testimonials-sub sr">From luxury resorts to commercial health clubs — KW100 performs where standards are highest.</p>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card sr">
+          <div class="testimonial-stars">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <p class="testimonial-quote">
+            "We had a technician visiting twice a week. Since KW100 was installed, we haven't had a single call-out. The water quality is consistently better than we ever managed manually — and our chemical costs have dropped by over 60%."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-name">James Harrington</div>
+            <div class="testimonial-role">Head of Facilities · The Langford Hotel &amp; Spa</div>
+          </div>
+        </div>
+        <div class="testimonial-card sr">
+          <div class="testimonial-stars">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <p class="testimonial-quote">
+            "Our members train six days a week. Pool chemistry needs to be exact, every session. KW100 manages it without us thinking about it. The system flagged a filter issue three days before it would have caused a closure — that alone justified the investment."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-name">Sarah Okonkwo</div>
+            <div class="testimonial-role">Operations Director · Meridian Athletic Club</div>
+          </div>
+        </div>
+        <div class="testimonial-card sr">
+          <div class="testimonial-stars">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <p class="testimonial-quote">
+            "We manage twelve residential pools across the estate. Coordinating service schedules was a constant overhead. KW100 gave us centralised visibility and eliminated most of the manual work entirely. Installation across all sites took less than three days."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-name">Daniel Reyes</div>
+            <div class="testimonial-role">Estate Manager · Vantage Residential Group</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       CTA
+  ═══════════════════════════════════════════════ -->
+  <section class="cta-section" id="contact">
+    <div class="cta-inner">
+      <h2 class="cta-h2 sr">
+        Ready to eliminate pool maintenance entirely?
+      </h2>
+      <div class="cta-actions sr">
+        <a href="#" class="btn-primary">
+          Request a Demo
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="#" class="btn-ghost">Download Spec Sheet</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <!-- LOGO — swap src to update -->
+      <div class="footer-logo">
+        <img src=".claude/kw-white-full.png" alt="KontrolWater" />
+      </div>
+      <span class="footer-copy">© 2025 KontrolWater. All rights reserved.</span>
+      <ul class="footer-links">
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <script>
+    /* ══════════════════════════════════════════════════
+       NAV
+    ══════════════════════════════════════════════════ */
+    const nav = document.getElementById('nav');
+    const onScroll = () => nav.classList.toggle('filled', window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    /* ══════════════════════════════════════════════════
+       COUNT-UP — fires AFTER the reveal fade-in settles
+       countDelay: ms to wait after in-view before counting
+    ══════════════════════════════════════════════════ */
+    const COUNT_DURATION = 2600; // slower count-up
+    const COUNT_DELAY    = 500;  // wait for fade-in to settle first
+
+    function animateCount(el, extraDelay, onDone) {
+      if (el.dataset.counted) return;
+      el.dataset.counted = '1';
+      const delay = COUNT_DELAY + (extraDelay || 0);
+      const target = parseInt(el.dataset.target, 10);
+      setTimeout(() => {
+        const start = performance.now();
+        function tick(now) {
+          const t = Math.min((now - start) / COUNT_DURATION, 1);
+          const eased = 1 - Math.pow(1 - t, 3);
+          el.textContent = Math.round(eased * target);
+          if (t < 1) requestAnimationFrame(tick);
+          else { el.textContent = target; if (onDone) onDone(); }
+        }
+        requestAnimationFrame(tick);
+      }, delay);
+    }
+
+    /* ══════════════════════════════════════════════════
+       TYPEWRITER — reusable, slower
+    ══════════════════════════════════════════════════ */
+    const TW_SPEED = 65; // ms per character (slower)
+
+    function runTypewriter(el, onDone) {
+      if (el.dataset.typed) return;
+      el.dataset.typed = '1';
+      const text = el.dataset.text || '';
+      el.style.visibility = 'visible';
+      el.textContent = '';
+      const cursor = document.createElement('span');
+      cursor.className = 'tw-cursor';
+      el.appendChild(cursor);
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          cursor.insertAdjacentText('beforebegin', text[i++]);
+          setTimeout(type, TW_SPEED);
+        } else {
+          if (onDone) onDone();
+          setTimeout(() => cursor.remove(), 2000);
+        }
+      }
+      setTimeout(type, 300);
+    }
+
+    /* ══════════════════════════════════════════════════
+       REVEAL OPTIONS
+       Elements must be scrolled to — never auto-fire on
+       page load. '-80px 0px -120px 0px' requires the
+       element to be comfortably mid-viewport.
+    ══════════════════════════════════════════════════ */
+    const revealOpts     = { threshold: 0, rootMargin: '-80px 0px -120px 0px' };
+    // Rows only fire when in the upper half of the viewport — forces true scroll-by-scroll reveal
+    const rowRevealOpts  = { threshold: 0, rootMargin: '0px 0px -48% 0px' };
+
+    /* ══════════════════════════════════════════════════
+       STAGGERED GRIDS — metrics, numbers, how-steps
+       Reveal cells left→right; count-up starts after
+       each cell's own fade-in delay.
+    ══════════════════════════════════════════════════ */
+    const staggerGroups = ['.metrics-grid', '.numbers-grid'];
+
+    staggerGroups.forEach(selector => {
+      const container = document.querySelector(selector);
+      if (!container) return;
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+
+          // Collect all count-num elements with their stagger delays
+          const countItems = []; // { el, staggerMs }
+          container.querySelectorAll('.sr').forEach(child => {
+            child.classList.add('in-view');
+            const staggerMs = parseFloat(getComputedStyle(child).getPropertyValue('--stagger-delay')) || 0;
+            child.querySelectorAll('.count-num[data-target]').forEach(el => {
+              countItems.push({ el, staggerMs });
+            });
+          });
+
+          if (selector === '.metrics-grid' && countItems.length) {
+            // Lock downward scroll until the last counter finishes
+            const blockDown = e => { if (e.deltaY > 0) e.preventDefault(); };
+            window.addEventListener('wheel',     blockDown, { passive: false });
+            window.addEventListener('touchmove', blockDown, { passive: false });
+
+            // Find which item finishes last (highest staggerMs)
+            const lastIdx = countItems.reduce((best, item, i) =>
+              item.staggerMs >= countItems[best].staggerMs ? i : best, 0);
+
+            countItems.forEach(({ el, staggerMs }, i) => {
+              animateCount(el, staggerMs, i === lastIdx ? () => {
+                window.removeEventListener('wheel',     blockDown);
+                window.removeEventListener('touchmove', blockDown);
+              } : null);
+            });
+          } else {
+            countItems.forEach(({ el, staggerMs }) => animateCount(el, staggerMs));
+          }
+
+          obs.unobserve(container);
+        });
+      }, revealOpts);
+      obs.observe(container);
+    });
+
+    /* ══════════════════════════════════════════════════
+       GENERIC .sr ELEMENTS
+    ══════════════════════════════════════════════════ */
+    const srObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('in-view');
+        srObs.unobserve(entry.target);
+      });
+    }, revealOpts);
+
+    const staggerSelectors = staggerGroups.join(', ');
+    document.querySelectorAll('.sr').forEach(el => {
+      if (!el.closest(staggerSelectors)) srObs.observe(el);
+    });
+
+    /* ══════════════════════════════════════════════════
+       TYPEWRITER: intro heading
+    ══════════════════════════════════════════════════ */
+    const twHeading = document.getElementById('tw-heading');
+    if (twHeading) {
+      const twObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          runTypewriter(twHeading);
+          twObs.unobserve(twHeading);
+        });
+      }, revealOpts);
+      twObs.observe(twHeading);
+    }
+
+    /* ══════════════════════════════════════════════════
+       DIFF TABLE — scroll-driven row reveals
+       Section is 380vh tall + sticky inner. Rows reveal
+       one-by-one via ScrollTrigger progress. User cannot
+       leave until all rows have appeared.
+    ══════════════════════════════════════════════════ */
+    (function () {
+      const diffSec  = document.getElementById('compare');
+      if (!diffSec) return;
+      const diffRows   = Array.from(diffSec.querySelectorAll('.diff-row-sr'));
+      const diffHead   = document.getElementById('diff-tw-heading');
+      const totalRows  = diffRows.length; // 7
+      // Thresholds: heading at 0.04, then rows spaced across 0.10–0.90
+      const rowThresholds = diffRows.map((_, i) => 0.10 + i * (0.80 / (totalRows - 1)));
+      const rowDone    = Array(totalRows).fill(false);
+      let   headDone   = false;
+
+      // Ensure GSAP is ready (it's registered just below, but registerPlugin is idempotent)
+      gsap.registerPlugin(ScrollTrigger);
+
+      ScrollTrigger.create({
+        trigger: diffSec,
+        start:   'top top',
+        end:     'bottom top',
+        onEnter() {
+          // Fire typewriter when section first pins
+          if (!headDone && diffHead) {
+            headDone = true;
+            runTypewriter(diffHead);
+          }
+        },
+        onUpdate(self) {
+          const p = self.progress;
+          rowThresholds.forEach((t, i) => {
+            if (p >= t && !rowDone[i]) {
+              rowDone[i] = true;
+              diffRows[i].classList.add('in-view');
+            }
+          });
+        }
+      });
+    })();
+
+    /* ══════════════════════════════════════════════════
+       GSAP — How It Works: ambient particles + scroll-driven
+       step reveals + SVG node highlights
+    ══════════════════════════════════════════════════ */
+    /* ── GSAP init ── */
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* ══════════════════════════════════════════════════
+       CANVAS PARTICLE SYSTEM — scroll-driven vacuum
+       Particles drift freely, then get pulled left and
+       disappear as the user scrolls through the section,
+       visualising the KW100 filtration process.
+    ══════════════════════════════════════════════════ */
+    let howVacuum  = 0;    // 0–1, updated by ScrollTrigger below
+    let card3Time  = null; // timestamp (ms) when card 3 first appeared
+
+    (function () {
+      const canvas = document.getElementById('how-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize, { passive: true });
+
+      const COUNT = 220;
+      const pts = Array.from({ length: COUNT }, (_, i) => ({
+        x:     Math.random(),
+        y:     Math.random(),
+        r:     i < 180 ? 0.8 + Math.random() * 1.6 : 2.8 + Math.random() * 3.5,
+        alpha: i < 180 ? 0.20 + Math.random() * 0.15 : 0.12 + Math.random() * 0.10,
+        vy:    -(0.03 + Math.random() * 0.09) / 60,
+        phase: Math.random() * Math.PI * 2,
+        freq:  0.002 + Math.random() * 0.005,
+        amp:   0.3 + Math.random() * 0.7,
+      }));
+
+      let frame = 0;
+      function tick() {
+        const W = canvas.width, H = canvas.height;
+        ctx.clearRect(0, 0, W, H);
+        frame++;
+
+        const vac = howVacuum;
+        const vacuuming = vac >= 0.26 || card3Time !== null;
+
+        // Phase 1 (card 2→3, scroll-driven): gentle pull builds up
+        // Phase 2 (after card 3, time-driven): strong pull clears all within 2 seconds
+        let pull = 0;
+        if (card3Time !== null) {
+          const elapsed = Math.min(1, (Date.now() - card3Time) / 2000);
+          pull = 0.020 + elapsed * 0.060; // 0.020 → 0.080 over 2s
+        } else if (vac >= 0.26) {
+          pull = Math.min(0.022, (vac - 0.26) * 0.18); // gentle ramp
+        }
+
+        const upScale = vacuuming ? 0 : 1;
+
+        pts.forEach(p => {
+          if (p.x <= -0.12) return; // already offscreen, skip
+
+          p.y += p.vy * upScale;
+          p.x -= pull;
+
+          if (p.x < -0.08) {
+            if (!vacuuming) {
+              // Free-drift mode: loop back from bottom/right
+              p.x = Math.random();
+              p.y = Math.random();
+            }
+            // Vacuum mode: particle is gone — leave it offscreen
+            return;
+          }
+
+          // Normal upward wrap only when drifting freely
+          if (p.y < -0.02 && !vacuuming) {
+            p.y = 1.02;
+            p.x = Math.random();
+          }
+
+          // Edge fade: particles dim as they approach the left wall (natural vacuum feel)
+          const edgeFade = Math.min(1, p.x * 12);
+          const alpha = p.alpha * edgeFade;
+          if (alpha < 0.005) return;
+
+          const cx = p.x * W + Math.sin(frame * p.freq + p.phase) * p.amp;
+          const cy = p.y * H;
+
+          ctx.beginPath();
+          ctx.arc(cx, cy, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+          ctx.fill();
+        });
+
+        requestAnimationFrame(tick);
+      }
+      tick();
+    })();
+
+    /* ══════════════════════════════════════════════════
+       HOW IT WORKS — scroll-driven card reveals
+    ══════════════════════════════════════════════════ */
+    const howSec = document.getElementById('how-it-works');
+    if (howSec) {
+      const steps       = howSec.querySelectorAll('.how-step');
+      const header      = howSec.querySelector('.how-header');
+      const filteringEl = document.getElementById('how-filtering');
+
+      ScrollTrigger.create({
+        trigger: howSec,
+        start: 'top 90%',
+        once: true,
+        onEnter() {
+          if (header) header.querySelectorAll('.sr').forEach(el => el.classList.add('in-view'));
+        }
+      });
+
+      const stepDone   = [false, false, false];
+      const thresholds = [0.04, 0.26, 0.50];
+      const labelEl    = filteringEl?.querySelector('.how-filtering-label');
+      let filterLocked = false;
+
+      ScrollTrigger.create({
+        trigger: howSec,
+        start: 'top top',
+        end:   'bottom top',
+        onUpdate(self) {
+          const p = self.progress;
+          howVacuum = p;
+
+          thresholds.forEach((t, i) => {
+            if (p >= t && !stepDone[i]) {
+              stepDone[i] = true;
+              steps[i]?.classList.add('step-active');
+            }
+          });
+
+          // Reset if user scrolls back before card 2
+          if (p < 0.20) {
+            filterLocked = false;
+            card3Time = null;
+          }
+
+          // Spinner visible from card 2 onwards (until filterLocked takes over)
+          if (filteringEl && !filterLocked) {
+            if (p >= 0.26) {
+              filteringEl.classList.add('visible');
+              filteringEl.classList.remove('done');
+              if (labelEl) labelEl.textContent = 'Filtering';
+            } else {
+              filteringEl.classList.remove('visible');
+            }
+          }
+
+          // Card 3 first appears — start 2-second timer for particles to fully clear
+          if (p >= 0.50 && card3Time === null) {
+            card3Time = Date.now();
+            setTimeout(() => {
+              if (!filteringEl) return;
+              filterLocked = true;
+              filteringEl.classList.add('done');
+              if (labelEl) labelEl.textContent = 'Filtered';
+
+              // Scroll unlocks 1 second after checkmark appears
+              const blockScroll = e => e.preventDefault();
+              window.addEventListener('wheel',     blockScroll, { passive: false });
+              window.addEventListener('touchmove', blockScroll, { passive: false });
+              setTimeout(() => {
+                window.removeEventListener('wheel',     blockScroll);
+                window.removeEventListener('touchmove', blockScroll);
+              }, 1000);
+
+              // Fade out label shortly after
+              setTimeout(() => filteringEl.classList.remove('visible', 'done'), 900);
+            }, 2000);
+          }
+        }
+      });
+    }
+
+    /* ══════════════════════════════════════════════════
+       BLUEPRINT SCROLL-DRAW
+       Starts revealing as soon as the section header
+       enters the bottom of the viewport (+vh*0.6 offset
+       shifts the zero-point so drawing begins early).
+    ══════════════════════════════════════════════════ */
+    const setupSection = document.getElementById('specifications');
+    const setupDiagram = document.getElementById('setupDiagram');
+
+    function updateBlueprint() {
+      if (!setupSection || !setupDiagram) return;
+      const rect     = setupSection.getBoundingClientRect();
+      const scrollable = setupSection.offsetHeight - window.innerHeight;
+      // Shift start: drawing begins when section title enters viewport bottom
+      const earlyStart = window.innerHeight * 0.75;
+      const progress  = Math.max(0, Math.min(1, (-rect.top + earlyStart) / (scrollable + earlyStart)));
+      setupDiagram.style.clipPath = `inset(0 0 ${(1 - progress) * 100}% 0)`;
+    }
+
+    let bpRaf = false;
+    window.addEventListener('scroll', () => {
+      if (!bpRaf) { bpRaf = true; requestAnimationFrame(() => { updateBlueprint(); bpRaf = false; }); }
+    }, { passive: true });
+    updateBlueprint();
+
+  </script>
+</body>
+</html>
