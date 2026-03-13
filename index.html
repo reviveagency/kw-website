@@ -1381,25 +1381,7 @@
             });
           });
 
-          if (selector === '.metrics-grid' && countItems.length) {
-            // Lock downward scroll until the last counter finishes
-            const blockDown = e => { if (e.deltaY > 0) e.preventDefault(); };
-            window.addEventListener('wheel',     blockDown, { passive: false });
-            window.addEventListener('touchmove', blockDown, { passive: false });
-
-            // Find which item finishes last (highest staggerMs)
-            const lastIdx = countItems.reduce((best, item, i) =>
-              item.staggerMs >= countItems[best].staggerMs ? i : best, 0);
-
-            countItems.forEach(({ el, staggerMs }, i) => {
-              animateCount(el, staggerMs, i === lastIdx ? () => {
-                window.removeEventListener('wheel',     blockDown);
-                window.removeEventListener('touchmove', blockDown);
-              } : null);
-            });
-          } else {
-            countItems.forEach(({ el, staggerMs }) => animateCount(el, staggerMs));
-          }
+          countItems.forEach(({ el, staggerMs }) => animateCount(el, staggerMs));
 
           obs.unobserve(container);
         });
@@ -1422,6 +1404,60 @@
     document.querySelectorAll('.sr').forEach(el => {
       if (!el.closest(staggerSelectors)) srObs.observe(el);
     });
+
+    /* ══════════════════════════════════════════════════
+       SECTION ENTRANCE GATES — double-scroll to continue
+       Each section pauses the user when its top aligns
+       with the viewport top. The first scroll gesture is
+       absorbed; the second continues past the section.
+       Fires only when the section top is within ±30px of
+       the viewport top — never while sections overlap.
+    ══════════════════════════════════════════════════ */
+    (function () {
+      // Exclude hero (video auto-plays) and how (GSAP manages its own lock)
+      const gateSecs = Array.from(
+        document.querySelectorAll('section:not(.hero):not(.how):not(.cta-section)')
+      );
+
+      let gatedSec  = null; // section currently gated
+      let blockFn   = null; // active block handler
+
+      function releaseGate() {
+        if (!blockFn) return;
+        window.removeEventListener('wheel',     blockFn);
+        window.removeEventListener('touchmove', blockFn);
+        blockFn  = null;
+        gatedSec = null;
+      }
+
+      function engageGate(sec) {
+        if (gatedSec === sec) return; // already on this section
+        gatedSec = sec;
+
+        // After a short moment the next scroll gesture releases the gate
+        let canRelease = false;
+        setTimeout(() => { canRelease = true; }, 380);
+
+        blockFn = e => {
+          e.preventDefault();
+          if (canRelease) releaseGate();
+        };
+
+        window.addEventListener('wheel',     blockFn, { passive: false });
+        window.addEventListener('touchmove', blockFn, { passive: false });
+
+        // Safety: auto-release after 3.5 s so the user is never stuck
+        setTimeout(releaseGate, 3500);
+      }
+
+      window.addEventListener('scroll', () => {
+        if (blockFn) return; // gate already active
+        gateSecs.forEach(sec => {
+          const top = sec.getBoundingClientRect().top;
+          if (top > -30 && top < 30) engageGate(sec);
+        });
+      }, { passive: true });
+    })();
 
     /* ══════════════════════════════════════════════════
        TYPEWRITER: intro heading
