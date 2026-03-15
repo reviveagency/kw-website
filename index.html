@@ -1327,8 +1327,14 @@
       if (el.dataset.typed) return;
       el.dataset.typed = '1';
       const text = el.dataset.text || '';
+
+      // Pre-fill with full text to measure final height, then lock that space
+      // so the typewriter never causes layout reflow / page-height changes.
       el.style.visibility = 'visible';
+      el.textContent = text;
+      el.style.minHeight = el.offsetHeight + 'px';
       el.textContent = '';
+
       const cursor = document.createElement('span');
       cursor.className = 'tw-cursor';
       el.appendChild(cursor);
@@ -1509,6 +1515,16 @@
             if (p >= t && !rowDone[i]) {
               rowDone[i] = true;
               diffRows[i].classList.add('in-view');
+              // Last row: brief scroll lock so user can read before continuing
+              if (i === totalRows - 1) {
+                const block = e => e.preventDefault();
+                window.addEventListener('wheel',     block, { passive: false });
+                window.addEventListener('touchmove', block, { passive: false });
+                setTimeout(() => {
+                  window.removeEventListener('wheel',     block);
+                  window.removeEventListener('touchmove', block);
+                }, 1200);
+              }
             }
           });
         }
@@ -1563,32 +1579,37 @@
 
         const vac = howVacuum;
 
-        // phase1: 0→1 as scroll goes card2(0.26) → card3(0.50) — gentle drift begins
-        // phase2: 0→1 as scroll goes card3(0.50) → 0.85 — particles shrink & thin out
+        // phase1: card2(0.26)→card3(0.50) — particles stream left and loop back from right;
+        //         particle count stays constant, just a visible leftward flow.
+        // phase2: card3(0.50)→0.85 — particles leave permanently, shrinking & thinning as they go.
         const phase1 = vac >= 0.26 ? Math.min(1, (vac - 0.26) / 0.24) : 0;
         const phase2 = vac >= 0.50 ? Math.min(1, (vac - 0.50) / 0.35) : 0;
 
-        // Continuous pull: gentle in phase1, builds steadily through phase2
-        const pull = phase1 * 0.005 + phase2 * 0.018;
+        // Continuous pull — gentle stream in phase1, builds in phase2
+        const pull = phase1 * 0.005 + phase2 * 0.020;
 
-        // Upward drift fades out across phase1
+        // Upward drift fades across phase1 so particles flow horizontally by card3
         const upScale = Math.max(0, 1 - phase1);
 
-        // Particles get thinner and smaller after card 3
-        const globalFade  = Math.max(0, 1 - phase2 * 1.15);
-        const globalScale = Math.max(0.05, 1 - phase2 * 0.80);
+        // Phase2 only: particles thin (alpha) and shrink (radius) to nothing
+        const globalFade  = Math.max(0, 1 - phase2 * 1.2);
+        const globalScale = Math.max(0.05, 1 - phase2 * 0.82);
 
         pts.forEach(p => {
-          if (p.x <= -0.10) return; // already offscreen
-
           p.y += p.vy * upScale;
           p.x -= pull;
 
           if (p.x < -0.08) {
-            if (vac < 0.26) { p.x = Math.random(); p.y = Math.random(); }
-            return; // vacuum mode: particle gone
+            if (vac < 0.50) {
+              // Phase1: loop back from right — streaming effect, no particles lost
+              p.x = 1.02 + Math.random() * 0.08;
+              p.y = Math.random();
+            } else {
+              return; // Phase2: permanently gone
+            }
           }
 
+          // Free-drift top-wrap before vacuuming starts
           if (p.y < -0.02 && vac < 0.26) { p.y = 1.02; p.x = Math.random(); }
 
           const edgeFade = Math.min(1, p.x * 12);
