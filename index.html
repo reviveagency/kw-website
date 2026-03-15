@@ -1512,26 +1512,36 @@
       const metricsEl = document.querySelector('section.metrics');
       if (!metricsEl) return;
 
-      let gateFired   = false;
-      let inView      = false;
+      let blockUntil = 0;   // timestamp until which ALL downward scroll is blocked
+      let gateFired  = false;
+      let inView     = false;
 
-      // Track whether metrics is currently visible
       new IntersectionObserver(entries => {
         inView = entries[0].isIntersecting;
-        if (!inView) gateFired = false; // reset so it fires again on re-entry
+        if (!inView) { gateFired = false; blockUntil = 0; }
       }, { threshold: 0 }).observe(metricsEl);
 
-      // On the first downward scroll while the metrics bottom is in the lower
-      // portion of the viewport, block that event so the user must scroll again
       window.addEventListener('wheel', e => {
-        if (!inView || gateFired || e.deltaY <= 0) return;
+        if (e.deltaY <= 0) return;
+
+        // If currently inside the block window, keep preventing scroll
+        if (Date.now() < blockUntil) {
+          e.preventDefault();
+          return;
+        }
+
+        if (!inView || gateFired) return;
         const rect = metricsEl.getBoundingClientRect();
-        // Fire when user is scrolling down and the bottom of metrics is
-        // in the lower ~70 % of the viewport (they've seen the numbers)
-        if (rect.bottom > 0 && rect.bottom < window.innerHeight * 0.70) {
+        if (rect.bottom > 0 && rect.bottom < window.innerHeight * 0.80) {
           gateFired = true;
+          // Block all downward momentum for 900 ms — covers full trackpad swipe
+          blockUntil = Date.now() + 900;
           e.preventDefault();
         }
+      }, { passive: false });
+
+      window.addEventListener('touchmove', e => {
+        if (Date.now() < blockUntil) e.preventDefault();
       }, { passive: false });
     })();
 
