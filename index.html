@@ -356,8 +356,6 @@
        KEY METRICS BAR
     ─────────────────────────────────────────────────────── */
     .metrics {
-      border-top: 1px solid var(--border-faint);
-      border-bottom: 1px solid var(--border-faint);
       margin-bottom: 150px;
     }
     .metrics-grid {
@@ -1566,17 +1564,22 @@
         const vac = howVacuum;
         const vacuuming = vac >= 0.26 || card3Time !== null;
 
-        // Phase 1 (card 2→3, scroll-driven): gentle pull builds up
-        // Phase 2 (after card 3, time-driven): strong pull clears all within 2 seconds
+        // Phase 1 (card 2 → card 3, scroll-driven): barely-visible leftward lean.
+        //   Particles drift toward the left but none fully disappear yet.
+        // Phase 2 (after card 3, time-driven over 2 s): strong sweep clears all.
         let pull = 0;
         if (card3Time !== null) {
           const elapsed = Math.min(1, (Date.now() - card3Time) / 2000);
-          pull = 0.020 + elapsed * 0.060; // 0.020 → 0.080 over 2s
+          pull = 0.004 + elapsed * 0.058; // 0.004 → 0.062 over 2 s
         } else if (vac >= 0.26) {
-          pull = Math.min(0.022, (vac - 0.26) * 0.18); // gentle ramp
+          // Very gentle — only a subtle drift; nothing disappears before card 3
+          pull = (vac - 0.26) / 0.24 * 0.004; // 0 → 0.004 as progress goes 0.26→0.50
         }
 
-        const upScale = vacuuming ? 0 : 1;
+        // Upward drift fades out gradually between card 2 and card 3
+        const upScale = vac >= 0.26
+          ? Math.max(0, 1 - (vac - 0.26) / 0.24)
+          : 1;
 
         pts.forEach(p => {
           if (p.x <= -0.12) return; // already offscreen, skip
