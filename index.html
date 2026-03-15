@@ -1494,9 +1494,10 @@
           const rect = sec.getBoundingClientRect();
           // Standard gate: section top enters viewport top
           if (rect.top > -30 && rect.top < 30) engageGate(sec);
-          // Extra gate for intro: fires when section bottom leaves viewport top
-          // (i.e. you've read through it and are about to scroll to metrics)
-          if (sec.classList.contains('intro') && rect.bottom > -50 && rect.bottom < 60) {
+          // Bottom-exit gates: fire when section bottom approaches viewport top
+          // so the user must scroll twice to leave these short sections
+          const isBottomExit = sec.classList.contains('intro') || sec.classList.contains('metrics');
+          if (isBottomExit && rect.bottom > -50 && rect.bottom < 60) {
             engageGate(sec);
           }
         });
