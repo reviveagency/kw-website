@@ -1494,14 +1494,45 @@
           const rect = sec.getBoundingClientRect();
           // Standard gate: section top enters viewport top
           if (rect.top > -30 && rect.top < 30) engageGate(sec);
-          // Bottom-exit gates: fire when section bottom approaches viewport top
-          // so the user must scroll twice to leave these short sections
-          const isBottomExit = sec.classList.contains('intro') || sec.classList.contains('metrics');
-          if (isBottomExit && rect.bottom > -50 && rect.bottom < 60) {
+          // Bottom-exit gate for intro only (metrics handled separately below)
+          if (sec.classList.contains('intro') && rect.bottom > -50 && rect.bottom < 60) {
             engageGate(sec);
           }
         });
       }, { passive: true });
+    })();
+
+    /* ══════════════════════════════════════════════════
+       METRICS EXIT GATE
+       Intercepts the first downward wheel/touch event
+       while the metrics section is still in view, forcing
+       the user to scroll twice to reach How It Works.
+    ══════════════════════════════════════════════════ */
+    (function () {
+      const metricsEl = document.querySelector('section.metrics');
+      if (!metricsEl) return;
+
+      let gateFired   = false;
+      let inView      = false;
+
+      // Track whether metrics is currently visible
+      new IntersectionObserver(entries => {
+        inView = entries[0].isIntersecting;
+        if (!inView) gateFired = false; // reset so it fires again on re-entry
+      }, { threshold: 0 }).observe(metricsEl);
+
+      // On the first downward scroll while the metrics bottom is in the lower
+      // portion of the viewport, block that event so the user must scroll again
+      window.addEventListener('wheel', e => {
+        if (!inView || gateFired || e.deltaY <= 0) return;
+        const rect = metricsEl.getBoundingClientRect();
+        // Fire when user is scrolling down and the bottom of metrics is
+        // in the lower ~70 % of the viewport (they've seen the numbers)
+        if (rect.bottom > 0 && rect.bottom < window.innerHeight * 0.70) {
+          gateFired = true;
+          e.preventDefault();
+        }
+      }, { passive: false });
     })();
 
     /* ══════════════════════════════════════════════════
