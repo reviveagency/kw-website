@@ -1528,8 +1528,8 @@
        disappear as the user scrolls through the section,
        visualising the KW100 filtration process.
     ══════════════════════════════════════════════════ */
-    let howVacuum  = 0;    // 0–1, updated by ScrollTrigger below
-    let card3Time  = null; // timestamp (ms) when card 3 first appeared
+    let howVacuum   = 0;     // 0–1, updated by ScrollTrigger below
+    let filterShown = false; // true once "Filtered" checkmark has appeared
 
     (function () {
       const canvas = document.getElementById('how-canvas');
@@ -1562,57 +1562,47 @@
         frame++;
 
         const vac = howVacuum;
-        const vacuuming = vac >= 0.26 || card3Time !== null;
 
-        // Phase 1 (card 2 → card 3, scroll-driven): barely-visible leftward lean.
-        //   Particles drift toward the left but none fully disappear yet.
-        // Phase 2 (after card 3, time-driven over 2 s): strong sweep clears all.
-        let pull = 0;
-        if (card3Time !== null) {
-          const elapsed = Math.min(1, (Date.now() - card3Time) / 2000);
-          pull = 0.004 + elapsed * 0.058; // 0.004 → 0.062 over 2 s
-        } else if (vac >= 0.26) {
-          // Very gentle — only a subtle drift; nothing disappears before card 3
-          pull = (vac - 0.26) / 0.24 * 0.004; // 0 → 0.004 as progress goes 0.26→0.50
-        }
+        // phase1: 0→1 as scroll goes card2(0.26) → card3(0.50) — gentle drift begins
+        // phase2: 0→1 as scroll goes card3(0.50) → 0.85 — particles shrink & thin out
+        const phase1 = vac >= 0.26 ? Math.min(1, (vac - 0.26) / 0.24) : 0;
+        const phase2 = vac >= 0.50 ? Math.min(1, (vac - 0.50) / 0.35) : 0;
 
-        // Upward drift fades out gradually between card 2 and card 3
-        const upScale = vac >= 0.26
-          ? Math.max(0, 1 - (vac - 0.26) / 0.24)
-          : 1;
+        // Continuous pull: gentle in phase1, builds steadily through phase2
+        const pull = phase1 * 0.005 + phase2 * 0.018;
+
+        // Upward drift fades out across phase1
+        const upScale = Math.max(0, 1 - phase1);
+
+        // Particles get thinner and smaller after card 3
+        const globalFade  = Math.max(0, 1 - phase2 * 1.15);
+        const globalScale = Math.max(0.05, 1 - phase2 * 0.80);
 
         pts.forEach(p => {
-          if (p.x <= -0.12) return; // already offscreen, skip
+          if (p.x <= -0.10) return; // already offscreen
 
           p.y += p.vy * upScale;
           p.x -= pull;
 
           if (p.x < -0.08) {
-            if (!vacuuming) {
-              // Free-drift mode: loop back from bottom/right
-              p.x = Math.random();
-              p.y = Math.random();
-            }
-            // Vacuum mode: particle is gone — leave it offscreen
-            return;
+            if (vac < 0.26) { p.x = Math.random(); p.y = Math.random(); }
+            return; // vacuum mode: particle gone
           }
 
-          // Normal upward wrap only when drifting freely
-          if (p.y < -0.02 && !vacuuming) {
-            p.y = 1.02;
-            p.x = Math.random();
-          }
+          if (p.y < -0.02 && vac < 0.26) { p.y = 1.02; p.x = Math.random(); }
 
-          // Edge fade: particles dim as they approach the left wall (natural vacuum feel)
           const edgeFade = Math.min(1, p.x * 12);
-          const alpha = p.alpha * edgeFade;
+          const alpha = p.alpha * edgeFade * globalFade;
           if (alpha < 0.005) return;
+
+          const r = p.r * globalScale;
+          if (r < 0.1) return;
 
           const cx = p.x * W + Math.sin(frame * p.freq + p.phase) * p.amp;
           const cy = p.y * H;
 
           ctx.beginPath();
-          ctx.arc(cx, cy, p.r, 0, Math.PI * 2);
+          ctx.arc(cx, cy, r, 0, Math.PI * 2);
           ctx.fillStyle = `rgba(255,255,255,${alpha})`;
           ctx.fill();
         });
@@ -1643,7 +1633,7 @@
       const stepDone   = [false, false, false];
       const thresholds = [0.04, 0.26, 0.50];
       const labelEl    = filteringEl?.querySelector('.how-filtering-label');
-      let filterLocked = false;
+      let scrollLockFired = false;
 
       ScrollTrigger.create({
         trigger: howSec,
@@ -1660,33 +1650,31 @@
             }
           });
 
-          // Reset if user scrolls back before card 2
-          if (p < 0.20) {
-            filterLocked = false;
-            card3Time = null;
-          }
-
-          // Spinner visible from card 2 onwards (until filterLocked takes over)
-          if (filteringEl && !filterLocked) {
-            if (p >= 0.26) {
+          if (filteringEl) {
+            if (filterShown) {
+              // "Filtered" is permanent — always show once it has appeared
+              filteringEl.classList.add('visible', 'done');
+              if (labelEl) labelEl.textContent = 'Filtered';
+            } else if (p >= 0.26) {
+              // Card 2 onwards: show spinner + "Filtering"
               filteringEl.classList.add('visible');
               filteringEl.classList.remove('done');
               if (labelEl) labelEl.textContent = 'Filtering';
             } else {
-              filteringEl.classList.remove('visible');
+              filteringEl.classList.remove('visible', 'done');
             }
           }
 
-          // Card 3 first appears — start 2-second timer for particles to fully clear
-          if (p >= 0.50 && card3Time === null) {
-            card3Time = Date.now();
-            setTimeout(() => {
-              if (!filteringEl) return;
-              filterLocked = true;
+          // Particles nearly gone (~p 0.78) — switch to checkmark permanently
+          if (!filterShown && p >= 0.78) {
+            filterShown = true;
+            if (filteringEl) {
               filteringEl.classList.add('done');
               if (labelEl) labelEl.textContent = 'Filtered';
-
-              // Scroll unlocks 1 second after checkmark appears
+            }
+            // Brief scroll lock so user sees the checkmark before continuing
+            if (!scrollLockFired) {
+              scrollLockFired = true;
               const blockScroll = e => e.preventDefault();
               window.addEventListener('wheel',     blockScroll, { passive: false });
               window.addEventListener('touchmove', blockScroll, { passive: false });
@@ -1694,10 +1682,7 @@
                 window.removeEventListener('wheel',     blockScroll);
                 window.removeEventListener('touchmove', blockScroll);
               }, 1000);
-
-              // Fade out label shortly after
-              setTimeout(() => filteringEl.classList.remove('visible', 'done'), 900);
-            }, 2000);
+            }
           }
         }
       });
