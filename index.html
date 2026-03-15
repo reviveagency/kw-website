@@ -408,19 +408,18 @@
        TESTIMONIALS
     ─────────────────────────────────────────────────────── */
     .testimonials {
-      padding: 120px var(--pad);
+      padding: 120px 0;
       border-top: 1px solid var(--border-faint);
-    }
-    .testimonials-inner {
-      max-width: var(--max);
-      margin: 0 auto;
+      overflow: hidden;
     }
     .testimonials-header {
+      padding: 0 var(--pad);
+      max-width: var(--max);
+      margin: 0 auto 72px;
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
       gap: 60px;
-      margin-bottom: 72px;
     }
     .testimonials-h2 {
       font-size: clamp(28px, 3vw, 44px);
@@ -437,11 +436,17 @@
       max-width: 36ch;
       flex-shrink: 0;
     }
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border-faint);
+    .testimonials-track {
+      display: flex;
+      width: max-content;
+      border-top: 1px solid var(--border-faint);
+      border-bottom: 1px solid var(--border-faint);
+      animation: t-scroll 50s linear infinite;
+    }
+    .testimonials-track:hover { animation-play-state: paused; }
+    @keyframes t-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
     }
     .testimonial-card {
       background: var(--black);
@@ -449,6 +454,9 @@
       display: flex;
       flex-direction: column;
       gap: 32px;
+      width: 420px;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border-faint);
     }
     .testimonial-stars {
       display: flex;
@@ -1196,47 +1204,73 @@
        TESTIMONIALS
   ═══════════════════════════════════════════════ -->
   <section class="testimonials">
-    <div class="testimonials-inner">
-      <div class="testimonials-header">
-        <h2 class="testimonials-h2 sr">Trusted by operators who demand more from their pools.</h2>
-        <p class="testimonials-sub sr">From luxury resorts to commercial health clubs — KW100 performs where standards are highest.</p>
+    <div class="testimonials-header">
+      <h2 class="testimonials-h2 sr">Trusted by operators who demand more from their pools.</h2>
+      <p class="testimonials-sub sr">From luxury resorts to commercial health clubs — KW100 performs where standards are highest.</p>
+    </div>
+    <div class="testimonials-track">
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="testimonial-quote">"We had a technician visiting twice a week. Since KW100 was installed, we haven't had a single call-out. The water quality is consistently better than we ever managed manually — and our chemical costs have dropped by over 60%."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-name">James Harrington</div>
+          <div class="testimonial-role">Head of Facilities · The Langford Hotel &amp; Spa</div>
+        </div>
       </div>
-      <div class="testimonials-grid">
-        <div class="testimonial-card sr">
-          <div class="testimonial-stars">
-            <span></span><span></span><span></span><span></span><span></span>
-          </div>
-          <p class="testimonial-quote">
-            "We had a technician visiting twice a week. Since KW100 was installed, we haven't had a single call-out. The water quality is consistently better than we ever managed manually — and our chemical costs have dropped by over 60%."
-          </p>
-          <div class="testimonial-author">
-            <div class="testimonial-name">James Harrington</div>
-            <div class="testimonial-role">Head of Facilities · The Langford Hotel &amp; Spa</div>
-          </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="testimonial-quote">"Our members train six days a week. Pool chemistry needs to be exact, every session. KW100 manages it without us thinking about it. The system flagged a filter issue three days before it would have caused a closure — that alone justified the investment."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-name">Sarah Okonkwo</div>
+          <div class="testimonial-role">Operations Director · Meridian Athletic Club</div>
         </div>
-        <div class="testimonial-card sr">
-          <div class="testimonial-stars">
-            <span></span><span></span><span></span><span></span><span></span>
-          </div>
-          <p class="testimonial-quote">
-            "Our members train six days a week. Pool chemistry needs to be exact, every session. KW100 manages it without us thinking about it. The system flagged a filter issue three days before it would have caused a closure — that alone justified the investment."
-          </p>
-          <div class="testimonial-author">
-            <div class="testimonial-name">Sarah Okonkwo</div>
-            <div class="testimonial-role">Operations Director · Meridian Athletic Club</div>
-          </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="testimonial-quote">"We manage twelve residential pools across the estate. Coordinating service schedules was a constant overhead. KW100 gave us centralised visibility and eliminated most of the manual work entirely. Installation across all sites took less than three days."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-name">Daniel Reyes</div>
+          <div class="testimonial-role">Estate Manager · Vantage Residential Group</div>
         </div>
-        <div class="testimonial-card sr">
-          <div class="testimonial-stars">
-            <span></span><span></span><span></span><span></span><span></span>
-          </div>
-          <p class="testimonial-quote">
-            "We manage twelve residential pools across the estate. Coordinating service schedules was a constant overhead. KW100 gave us centralised visibility and eliminated most of the manual work entirely. Installation across all sites took less than three days."
-          </p>
-          <div class="testimonial-author">
-            <div class="testimonial-name">Daniel Reyes</div>
-            <div class="testimonial-role">Estate Manager · Vantage Residential Group</div>
-          </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="testimonial-quote">"We tested KW100 across three commercial pools before rolling it out nationwide. The results were consistent — balanced chemistry, fewer shutdowns, and a 35% drop in chemical spend. Our lifeguards now focus on safety, not maintenance."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-name">Maria Toscano</div>
+          <div class="testimonial-role">Head of Aquatics · FitLife National Group</div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="testimonial-quote">"I spend most of the year abroad. Having KW100 meant I could check my pool's status from anywhere and trust that nothing would go wrong while I was away. It's run flawlessly for fourteen months."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-name">Thomas Eriksson</div>
+          <div class="testimonial-role">Private Residence · Marbella</div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="testimonial-quote">"Water quality is a guest expectation we can't afford to miss. KW100 gave us real-time oversight we didn't have before — and the ROI was clear within the first quarter."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-name">Priya Mehra</div>
+          <div class="testimonial-role">General Manager · The Clifton Bay Resort</div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="testimonial-quote">"We run competitive swim meets with strict water quality requirements. KW100 keeps us compliant without constant manual checks. Our team went from daily testing to a weekly review."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-name">Michael Brandt</div>
+          <div class="testimonial-role">Facilities Director · Northshore Aquatic Centre</div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="testimonial-quote">"We specified KW100 across all fifteen pools in our new development. Buyers love the connected feature — it's become part of the sales pitch. Smart home means smart pool."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-name">Isabelle Fontaine</div>
+          <div class="testimonial-role">Development Director · Premier Living Estates</div>
         </div>
       </div>
     </div>
@@ -1464,6 +1498,17 @@
     })();
 
     /* ══════════════════════════════════════════════════
+       TESTIMONIALS CAROUSEL — duplicate cards for seamless infinite loop
+    ══════════════════════════════════════════════════ */
+    (function () {
+      const track = document.querySelector('.testimonials-track');
+      if (!track) return;
+      Array.from(track.children).forEach(card => {
+        track.appendChild(card.cloneNode(true));
+      });
+    })();
+
+    /* ══════════════════════════════════════════════════
        TYPEWRITER: intro heading
     ══════════════════════════════════════════════════ */
     const twHeading = document.getElementById('tw-heading');
@@ -1491,7 +1536,7 @@
       const diffHead   = document.getElementById('diff-tw-heading');
       const totalRows  = diffRows.length; // 7
       // Thresholds: heading at 0.04, then rows spaced across 0.10–0.90
-      const rowThresholds = diffRows.map((_, i) => 0.10 + i * (0.80 / (totalRows - 1)));
+      const rowThresholds = diffRows.map((_, i) => 0.08 + i * (0.62 / (totalRows - 1)));
       const rowDone    = Array(totalRows).fill(false);
       let   headDone   = false;
 
@@ -1544,8 +1589,11 @@
        disappear as the user scrolls through the section,
        visualising the KW100 filtration process.
     ══════════════════════════════════════════════════ */
-    let howVacuum   = 0;     // 0–1, updated by ScrollTrigger below
-    let filterShown = false; // true once "Filtered" checkmark has appeared
+    let howVacuum      = 0;     // 0–1, updated by ScrollTrigger below
+    let filterShown    = false; // true once "Filtered" checkmark has appeared
+    let card3StartTime = null;  // ms timestamp when card 3 first appeared
+    let card3Token     = 0;     // increments on reset to cancel stale timers
+    let activeBlockFn  = null;  // ref to active scroll-block handler
 
     (function () {
       const canvas = document.getElementById('how-canvas');
@@ -1579,19 +1627,19 @@
 
         const vac = howVacuum;
 
-        // phase1: card2(0.26)→card3(0.50) — particles stream left and loop back from right;
-        //         particle count stays constant, just a visible leftward flow.
-        // phase2: card3(0.50)→0.85 — particles leave permanently, shrinking & thinning as they go.
+        // phase1: scroll-driven — gentle leftward stream from card2(0.26) to card3(0.50).
+        //         Particles loop back from the right so count stays constant.
+        // phase2: time-driven — after card3 appears, particles sweep out and shrink over 1.5s.
         const phase1 = vac >= 0.26 ? Math.min(1, (vac - 0.26) / 0.24) : 0;
-        const phase2 = vac >= 0.50 ? Math.min(1, (vac - 0.50) / 0.35) : 0;
+        const phase2 = card3StartTime !== null
+          ? Math.min(1, (Date.now() - card3StartTime) / 1500)
+          : 0;
 
-        // Continuous pull — gentle stream in phase1, builds in phase2
-        const pull = phase1 * 0.005 + phase2 * 0.020;
+        // Pull: gentle stream in phase1, accelerating sweep in phase2
+        const pull     = phase1 * 0.005 + phase2 * 0.022;
+        const upScale  = Math.max(0, 1 - phase1);
 
-        // Upward drift fades across phase1 so particles flow horizontally by card3
-        const upScale = Math.max(0, 1 - phase1);
-
-        // Phase2 only: particles thin (alpha) and shrink (radius) to nothing
+        // Particles thin and shrink only during phase2 (time-driven, not affected by scroll-back)
         const globalFade  = Math.max(0, 1 - phase2 * 1.2);
         const globalScale = Math.max(0.05, 1 - phase2 * 0.82);
 
@@ -1600,16 +1648,22 @@
           p.x -= pull;
 
           if (p.x < -0.08) {
-            if (vac < 0.50) {
-              // Phase1: loop back from right — streaming effect, no particles lost
+            if (phase2 < 0.05) {
+              // Phase1 / free-drift: loop back from right — streaming effect, count constant
               p.x = 1.02 + Math.random() * 0.08;
               p.y = Math.random();
             } else {
-              return; // Phase2: permanently gone
+              return; // Phase2 underway: particle is permanently gone
             }
           }
 
-          // Free-drift top-wrap before vacuuming starts
+          // Reclaim particles stranded off the right edge (e.g. after scroll-back)
+          if (p.x > 1.10 && vac < 0.26) {
+            p.x = Math.random();
+            p.y = Math.random();
+          }
+
+          // Top-wrap in free drift only
           if (p.y < -0.02 && vac < 0.26) { p.y = 1.02; p.x = Math.random(); }
 
           const edgeFade = Math.min(1, p.x * 12);
@@ -1654,7 +1708,6 @@
       const stepDone   = [false, false, false];
       const thresholds = [0.04, 0.26, 0.50];
       const labelEl    = filteringEl?.querySelector('.how-filtering-label');
-      let scrollLockFired = false;
 
       ScrollTrigger.create({
         trigger: howSec,
@@ -1671,13 +1724,12 @@
             }
           });
 
+          // Filtering label state
           if (filteringEl) {
             if (filterShown) {
-              // "Filtered" is permanent — always show once it has appeared
               filteringEl.classList.add('visible', 'done');
               if (labelEl) labelEl.textContent = 'Filtered';
             } else if (p >= 0.26) {
-              // Card 2 onwards: show spinner + "Filtering"
               filteringEl.classList.add('visible');
               filteringEl.classList.remove('done');
               if (labelEl) labelEl.textContent = 'Filtering';
@@ -1686,23 +1738,36 @@
             }
           }
 
-          // Particles nearly gone (~p 0.78) — switch to checkmark permanently
-          if (!filterShown && p >= 0.78) {
-            filterShown = true;
-            if (filteringEl) {
-              filteringEl.classList.add('done');
-              if (labelEl) labelEl.textContent = 'Filtered';
-            }
-            // Brief scroll lock so user sees the checkmark before continuing
-            if (!scrollLockFired) {
-              scrollLockFired = true;
-              const blockScroll = e => e.preventDefault();
-              window.addEventListener('wheel',     blockScroll, { passive: false });
-              window.addEventListener('touchmove', blockScroll, { passive: false });
-              setTimeout(() => {
-                window.removeEventListener('wheel',     blockScroll);
-                window.removeEventListener('touchmove', blockScroll);
-              }, 1000);
+          // Card 3 first appears: start 1.5s time-based sweep + hard scroll lock
+          if (!filterShown && p >= 0.50 && card3StartTime === null) {
+            card3StartTime = Date.now();
+            const myToken = ++card3Token;
+
+            activeBlockFn = e => e.preventDefault();
+            window.addEventListener('wheel',     activeBlockFn, { passive: false });
+            window.addEventListener('touchmove', activeBlockFn, { passive: false });
+
+            setTimeout(() => {
+              if (card3Token !== myToken) return; // reset by scroll-back — abort
+              window.removeEventListener('wheel',     activeBlockFn);
+              window.removeEventListener('touchmove', activeBlockFn);
+              activeBlockFn = null;
+              filterShown = true;
+              if (filteringEl) {
+                filteringEl.classList.add('done');
+                if (labelEl) labelEl.textContent = 'Filtered';
+              }
+            }, 1500);
+          }
+
+          // User scrolled back past card 2 before animation finished — reset
+          if (!filterShown && p < 0.20 && card3StartTime !== null) {
+            card3StartTime = null;
+            ++card3Token; // invalidates pending timer
+            if (activeBlockFn) {
+              window.removeEventListener('wheel',     activeBlockFn);
+              window.removeEventListener('touchmove', activeBlockFn);
+              activeBlockFn = null;
             }
           }
         }
