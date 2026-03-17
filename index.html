@@ -510,7 +510,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 80px var(--pad);
+      padding: 120px var(--pad) 80px;
     }
     .setup-inner {
       max-width: var(--max);
@@ -624,12 +624,12 @@
     }
     .diff-inner {
       position: sticky;
-      top: 0;
-      height: 100vh;
+      top: 64px;
+      height: calc(100vh - 64px);
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 80px var(--pad);
+      padding: 60px var(--pad);
       overflow: hidden;
       max-width: 100%;
     }
