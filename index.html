@@ -2035,59 +2035,74 @@
       const track = document.querySelector('.testimonials-track');
       if (!track) return;
 
-      let startX = 0, startLeft = 0, isDragging = false, vel = 0, lastX = 0, rafId = null;
-      // Get current translateX
-      const getX = () => {
-        const t = new DOMMatrix(getComputedStyle(track).transform);
-        return t.m41;
+      let startX = 0, currentOffset = 0, dragOffset = 0;
+      let isDragging = false, vel = 0, lastX = 0, rafId = null;
+
+      // Snapshot the CSS animation's current visual position, then freeze it
+      const freezeAtCurrentPos = () => {
+        const matrix = new DOMMatrix(getComputedStyle(track).transform);
+        currentOffset = matrix.m41;
+        track.style.animationPlayState = 'paused';
+        track.style.transform = `translateX(${currentOffset}px)`;
+        // Disable the CSS animation entirely while dragging so it doesn't fight us
+        track.style.animation = 'none';
       };
 
       const startDrag = (x) => {
-        isDragging = true;
-        startX  = x;
-        startLeft = getX();
-        vel = 0;
-        lastX = x;
-        track.classList.add('dragging');
-        track.style.transform = `translateX(${startLeft}px)`;
         if (rafId) cancelAnimationFrame(rafId);
+        freezeAtCurrentPos();
+        isDragging = true;
+        startX = x;
+        lastX  = x;
+        vel    = 0;
+        dragOffset = 0;
+        track.classList.add('dragging');
       };
 
       const moveDrag = (x) => {
         if (!isDragging) return;
         vel = x - lastX;
         lastX = x;
-        const newX = startLeft + (x - startX);
-        track.style.transform = `translateX(${newX}px)`;
+        dragOffset = x - startX;
+        track.style.transform = `translateX(${currentOffset + dragOffset}px)`;
       };
 
       const endDrag = () => {
         if (!isDragging) return;
         isDragging = false;
         track.classList.remove('dragging');
+        let pos = currentOffset + dragOffset;
         // Inertia coast
-        let currentX = getX();
         const coast = () => {
-          vel *= 0.93;
-          currentX += vel;
-          track.style.transform = `translateX(${currentX}px)`;
-          if (Math.abs(vel) > 0.3) rafId = requestAnimationFrame(coast);
-          else {
-            // Resume CSS animation from where we left off — just remove inline transform
+          vel *= 0.92;
+          pos += vel;
+          track.style.transform = `translateX(${pos}px)`;
+          if (Math.abs(vel) > 0.4) {
+            rafId = requestAnimationFrame(coast);
+          } else {
+            // Re-enable CSS animation, offset to match where we stopped
+            // Use a CSS animation-delay trick: delay = -(pos / totalWidth) * duration
+            const totalWidth = track.scrollWidth / 2; // duplicated, so half is one loop
+            const duration = 50; // seconds — must match t-scroll duration
+            const pct = ((pos % totalWidth) + totalWidth) % totalWidth;
+            const delay = -(pct / totalWidth) * duration;
             track.style.transform = '';
+            track.style.animation = `t-scroll ${duration}s ${delay}s linear infinite`;
           }
         };
         rafId = requestAnimationFrame(coast);
       };
 
       track.addEventListener('touchstart', e => startDrag(e.touches[0].clientX), { passive: true });
-      track.addEventListener('touchmove',  e => moveDrag(e.touches[0].clientX),  { passive: true });
+      track.addEventListener('touchmove',  e => { e.preventDefault(); moveDrag(e.touches[0].clientX); }, { passive: false });
       track.addEventListener('touchend',   endDrag);
+      track.addEventListener('touchcancel', endDrag);
 
-      // Pointer events for desktop drag too
+      // Pointer (desktop + stylus) drag
       track.addEventListener('pointerdown', e => { track.setPointerCapture(e.pointerId); startDrag(e.clientX); });
-      track.addEventListener('pointermove', e => moveDrag(e.clientX));
+      track.addEventListener('pointermove', e => { if (isDragging) moveDrag(e.clientX); });
       track.addEventListener('pointerup',   endDrag);
+      track.addEventListener('pointercancel', endDrag);
     })();
 
   </script>
