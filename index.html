@@ -408,7 +408,7 @@
        TESTIMONIALS
     ─────────────────────────────────────────────────────── */
     .testimonials {
-      padding: 120px 0;
+      padding: 60px 0;
       border-top: 1px solid var(--border-faint);
       overflow: hidden;
     }
@@ -441,9 +441,8 @@
       width: max-content;
       border-top: 1px solid var(--border-faint);
       border-bottom: 1px solid var(--border-faint);
-      animation: t-scroll 50s linear infinite;
+      /* animation driven by JS — see testimonials marquee script */
     }
-    .testimonials-track:hover { animation-play-state: paused; }
     @keyframes t-scroll {
       from { transform: translateX(0); }
       to   { transform: translateX(-50%); }
@@ -510,7 +509,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 200px var(--pad) 80px;
+      padding: 80px var(--pad) 60px;
     }
     .setup-inner {
       max-width: var(--max);
@@ -564,7 +563,7 @@
        NUMBERS / SPECS
     ─────────────────────────────────────────────────────── */
     .numbers {
-      padding: 120px var(--pad);
+      padding: 60px var(--pad);
     }
     .numbers-inner {
       max-width: var(--max);
@@ -711,8 +710,8 @@
     }
     .how-sticky {
       position: sticky;
-      top: 0;
-      height: 100vh;
+      top: 64px;
+      height: calc(100vh - 64px);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -1011,9 +1010,11 @@
 
       .setup-header { grid-template-columns: 1fr; gap: 24px; margin-bottom: 36px; }
 
-      .how-header { grid-template-columns: 1fr; gap: 20px; margin-bottom: 36px; }
+      .how-sticky { justify-content: flex-start; padding-top: 24px; }
+      .how-header { grid-template-columns: 1fr; gap: 16px; margin-bottom: 24px; }
       .how-steps  { grid-template-columns: 1fr; }
-      .how-step   { padding: 36px 28px; }
+      .how-step   { padding: 22px 24px; }
+      .how-filtering { display: none; }
 
       .cta-inner   { grid-template-columns: 1fr; gap: 40px; }
       .cta-section { padding: 80px var(--pad); }
@@ -1066,48 +1067,54 @@
       .metric-cell:nth-child(2)  { border-bottom: 1px solid var(--border-faint); }
 
       /* Testimonials */
-      .testimonials { padding: 40px 0 60px; }
+      .testimonials { padding: 32px 0 40px; }
       .testimonials-header {
         padding: 0 20px;
-        margin-bottom: 32px;
+        margin-bottom: 24px;
         flex-direction: column;
         align-items: flex-start;
         gap: 12px;
       }
       .testimonials-sub { max-width: 100%; }
       .testimonial-card { width: 300px; padding: 32px 24px; }
-      /* Touch-draggable: pause CSS animation while dragging */
-      .testimonials-track.dragging { animation-play-state: paused; }
 
       /* Numbers */
-      .numbers { padding: 60px 20px; }
+      .numbers { padding: 32px 20px; }
       .numbers-grid { grid-template-columns: 1fr 1fr; }
       .num-cell { padding: 28px 20px; }
 
-      /* Setup — reduce tall empty space */
+      /* Setup — clear nav bar, reduce tall empty space */
       .setup { height: 200vh; }
-      .setup-sticky { padding: 48px 20px; }
+      .setup-sticky {
+        top: 64px;
+        height: calc(100vh - 64px);
+        padding: 20px 20px 20px;
+        justify-content: flex-start;
+      }
       .setup-header { grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px; }
 
-      /* Diff table — hide Manual Management column, show KW vs Traditional only */
-      .diff-inner { padding: 48px 20px; }
-      .diff-h2 { margin-bottom: 24px; font-size: clamp(22px, 6vw, 38px); }
+      /* Diff table — reduce top space, hide Manual Management column */
+      .diff { height: 260vh; }
+      .diff-inner { padding: 24px 20px 20px; }
+      .diff-h2 { margin-bottom: 20px; font-size: clamp(22px, 6vw, 38px); }
       .diff-table-wrap { overflow: visible; }
       .diff-table { min-width: 0; width: 100%; }
-      /* Hide 4th column (Manual Management) on mobile */
       .diff-table th:last-child,
       .diff-table td:last-child { display: none; }
       .diff-table td, .diff-table th { padding: 14px 6px; font-size: 13px; }
       .diff-table th:first-child  { font-size: 8px; }
       .diff-table th:not(:first-child) { font-size: 8px; }
 
-      /* How It Works — breathing room + filtering label position */
-      .how-inner { padding: 60px 20px 0; }
-      .how-header { grid-template-columns: 1fr; gap: 12px; margin-bottom: 20px; }
+      /* How It Works — clear nav bar, compact cards */
+      .how-sticky { justify-content: flex-start; padding-top: 16px; }
+      .how-inner { padding: 0 20px; }
+      .how-header { grid-template-columns: 1fr; gap: 10px; margin-bottom: 12px; }
       .how-steps  { grid-template-columns: 1fr; }
-      .how-step   { padding: 24px 20px; }
+      .how-step   { padding: 14px 16px; }
+      .how-step .step-num { margin-bottom: 10px; }
+      .how-step .step-title { margin-bottom: 6px; }
       .how { height: 600vh; }
-      .how-filtering { bottom: 28px; }
+      .how-filtering { display: none; }
 
       /* CTA */
       .cta-section { padding: 60px 20px; }
@@ -1125,6 +1132,7 @@
       /* Buttons */
       .btn-primary, .btn-ghost { width: 100%; justify-content: center; padding: 16px 24px; }
       .hero-actions { flex-direction: column; }
+
     }
   </style>
 </head>
@@ -1815,12 +1823,15 @@
       resize();
       window.addEventListener('resize', resize, { passive: true });
 
-      const COUNT = window.innerWidth < 640 ? 80 : 220;
+      const IS_MOB = window.innerWidth < 640;
+      const COUNT  = IS_MOB ? 120 : 220;
+      const rMul   = IS_MOB ? 1.6 : 1;
+      const aMul   = IS_MOB ? 1.8 : 1;
       const pts = Array.from({ length: COUNT }, (_, i) => ({
         x:     Math.random(),
         y:     Math.random(),
-        r:     i < 180 ? 0.8 + Math.random() * 1.6 : 2.8 + Math.random() * 3.5,
-        alpha: i < 180 ? 0.20 + Math.random() * 0.15 : 0.12 + Math.random() * 0.10,
+        r:     (i < 180 ? 0.8 + Math.random() * 1.6 : 2.8 + Math.random() * 3.5) * rMul,
+        alpha: (i < 180 ? 0.20 + Math.random() * 0.15 : 0.12 + Math.random() * 0.10) * aMul,
         vy:    -(0.03 + Math.random() * 0.09) / 60,
         phase: Math.random() * Math.PI * 2,
         freq:  0.002 + Math.random() * 0.005,
@@ -1835,46 +1846,47 @@
 
         const vac = howVacuum;
 
-        // phase1: scroll-driven — gentle leftward stream from card2(0.26) to card3(0.50).
-        //         Particles loop back from the right so count stays constant.
+        // phase1: scroll-driven — downward vacuum stream from card2(0.26) to card3(0.50).
+        //         Particles loop back from the top so count stays constant.
         // phase2: time-driven — after card3 appears, particles sweep out and shrink over 1.5s.
         const phase1 = vac >= 0.26 ? Math.min(1, (vac - 0.26) / 0.24) : 0;
         const phase2 = card3StartTime !== null
           ? Math.min(1, (Date.now() - card3StartTime) / 1500)
           : 0;
 
-        // Pull: gentle stream in phase1, accelerating sweep in phase2
-        const pull     = phase1 * 0.005 + phase2 * 0.022;
-        const upScale  = Math.max(0, 1 - phase1);
+        // Pull: vacuum pulls downward in phase1, accelerating in phase2
+        const pull    = phase1 * 0.005 + phase2 * 0.022;
+        const upScale = Math.max(0, 1 - phase1);
 
-        // Particles thin and shrink only during phase2 (time-driven, not affected by scroll-back)
+        // Particles thin and shrink only during phase2 (time-driven)
         const globalFade  = Math.max(0, 1 - phase2 * 1.2);
         const globalScale = Math.max(0.05, 1 - phase2 * 0.82);
 
         pts.forEach(p => {
-          p.y += p.vy * upScale;
-          p.x -= pull;
+          p.y += p.vy * upScale; // gentle upward free-drift (like bubbles)
+          p.y += pull;           // vacuum pulls DOWN when active
 
-          if (p.x < -0.08) {
+          if (p.y > 1.08) {
             if (phase2 < 0.05) {
-              // Phase1 / free-drift: loop back from right — streaming effect, count constant
-              p.x = 1.02 + Math.random() * 0.08;
-              p.y = Math.random();
+              // Phase1 / free-drift: loop back from top — streaming effect, count constant
+              p.y = -0.02 - Math.random() * 0.08;
+              p.x = Math.random();
             } else {
               return; // Phase2 underway: particle is permanently gone
             }
           }
 
-          // Reclaim particles stranded off the right edge (e.g. after scroll-back)
-          if (p.x > 1.10 && vac < 0.26) {
+          // Reclaim particles stranded off the bottom edge (e.g. after scroll-back)
+          if (p.y > 1.10 && vac < 0.26) {
             p.x = Math.random();
             p.y = Math.random();
           }
 
-          // Top-wrap in free drift only
+          // Bottom-wrap in free drift only (upward drift wraps from top to bottom)
           if (p.y < -0.02 && vac < 0.26) { p.y = 1.02; p.x = Math.random(); }
 
-          const edgeFade = Math.min(1, p.x * 12);
+          // Fade out as particles approach the bottom (where they're being vacuumed)
+          const edgeFade = Math.min(1, (1.1 - Math.max(0, p.y)) * 6);
           const alpha = p.alpha * edgeFade * globalFade;
           if (alpha < 0.005) return;
 
@@ -2030,78 +2042,103 @@
       menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
     })();
 
-    /* ── Testimonials touch drag ── */
+    /* ── Testimonials marquee — fully JS-driven (avoids compositor-thread stale reads) ── */
     (function () {
       const track = document.querySelector('.testimonials-track');
       if (!track) return;
 
-      let startX = 0, currentOffset = 0, dragOffset = 0;
-      let isDragging = false, vel = 0, lastX = 0, rafId = null;
+      const DURATION_MS = 50000; // 50 s per loop — matches original CSS timing
 
-      // Snapshot the CSS animation's current visual position, then freeze it
-      const freezeAtCurrentPos = () => {
-        const matrix = new DOMMatrix(getComputedStyle(track).transform);
-        currentOffset = matrix.m41;
-        track.style.animationPlayState = 'paused';
-        track.style.transform = `translateX(${currentOffset}px)`;
-        // Disable the CSS animation entirely while dragging so it doesn't fight us
-        track.style.animation = 'none';
+      let pos         = 0;     // current translateX in px
+      let isDragging  = false;
+      let inertiaVel  = 0;     // px/frame at ~60fps — set on drag release
+      let lastTs      = null;  // timestamp of previous loop tick
+      let startX      = 0;
+      let dragStartPos= 0;
+      const velSamples = [];
+
+      // Kill CSS animation — JS owns the transform from now on
+      track.style.animation = 'none';
+
+      const totalWidth = () => track.scrollWidth / 2;
+
+      // Wrap pos into (-totalWidth, 0] — seamless because content is duplicated
+      const wrap = () => {
+        const tw = totalWidth();
+        if (!tw) return;
+        pos = pos % tw;
+        if (pos > 0) pos -= tw;
       };
 
+      // Main RAF loop — runs every frame indefinitely
+      const loop = (ts) => {
+        requestAnimationFrame(loop);
+        if (isDragging) return; // moveDrag owns the transform while finger is down
+
+        if (lastTs === null) lastTs = ts;
+        const dt = Math.min(ts - lastTs, 50); // cap to avoid huge jump after tab switch
+        lastTs = ts;
+
+        if (Math.abs(inertiaVel) > 0.1) {
+          inertiaVel *= 0.93;
+          pos += inertiaVel;
+        } else {
+          inertiaVel = 0;
+          pos -= (totalWidth() / DURATION_MS) * dt; // steady auto-scroll
+        }
+        wrap();
+        track.style.transform = `translateX(${pos}px)`;
+      };
+
+      requestAnimationFrame(loop);
+
       const startDrag = (x) => {
-        if (rafId) cancelAnimationFrame(rafId);
-        freezeAtCurrentPos();
+        if (isDragging) return; // prevent double-fire from touch + pointer events on mobile
         isDragging = true;
-        startX = x;
-        lastX  = x;
-        vel    = 0;
-        dragOffset = 0;
+        inertiaVel = 0;
+        startX      = x;
+        dragStartPos = pos;
+        lastTs      = null;
+        velSamples.length = 0;
         track.classList.add('dragging');
       };
 
       const moveDrag = (x) => {
         if (!isDragging) return;
-        vel = x - lastX;
-        lastX = x;
-        dragOffset = x - startX;
-        track.style.transform = `translateX(${currentOffset + dragOffset}px)`;
+        velSamples.push({ x, t: performance.now() });
+        if (velSamples.length > 20) velSamples.shift();
+        pos = dragStartPos + (x - startX); // no wrap during drag — avoids mid-drag snap
+        track.style.transform = `translateX(${pos}px)`;
       };
 
       const endDrag = () => {
         if (!isDragging) return;
         isDragging = false;
         track.classList.remove('dragging');
-        let pos = currentOffset + dragOffset;
-        // Inertia coast
-        const coast = () => {
-          vel *= 0.92;
-          pos += vel;
-          track.style.transform = `translateX(${pos}px)`;
-          if (Math.abs(vel) > 0.4) {
-            rafId = requestAnimationFrame(coast);
-          } else {
-            // Re-enable CSS animation, offset to match where we stopped
-            // Use a CSS animation-delay trick: delay = -(pos / totalWidth) * duration
-            const totalWidth = track.scrollWidth / 2; // duplicated, so half is one loop
-            const duration = 50; // seconds — must match t-scroll duration
-            const pct = ((pos % totalWidth) + totalWidth) % totalWidth;
-            const delay = -(pct / totalWidth) * duration;
-            track.style.transform = '';
-            track.style.animation = `t-scroll ${duration}s ${delay}s linear infinite`;
-          }
-        };
-        rafId = requestAnimationFrame(coast);
+        wrap(); // normalise pos now that drag is done
+
+        // Velocity from the last ~80ms of movement
+        const now    = performance.now();
+        const recent = velSamples.filter(s => s.t >= now - 80);
+        inertiaVel   = 0;
+        if (recent.length >= 2) {
+          const first = recent[0], last = recent[recent.length - 1];
+          const dt = last.t - first.t;
+          if (dt > 0) inertiaVel = (last.x - first.x) / dt * 16.67;
+        }
+        inertiaVel = Math.max(-50, Math.min(50, inertiaVel));
       };
 
-      track.addEventListener('touchstart', e => startDrag(e.touches[0].clientX), { passive: true });
-      track.addEventListener('touchmove',  e => { e.preventDefault(); moveDrag(e.touches[0].clientX); }, { passive: false });
-      track.addEventListener('touchend',   endDrag);
+      // Touch events (mobile)
+      track.addEventListener('touchstart',  e => startDrag(e.touches[0].clientX), { passive: true });
+      track.addEventListener('touchmove',   e => { e.preventDefault(); moveDrag(e.touches[0].clientX); }, { passive: false });
+      track.addEventListener('touchend',    endDrag);
       track.addEventListener('touchcancel', endDrag);
 
-      // Pointer (desktop + stylus) drag
-      track.addEventListener('pointerdown', e => { track.setPointerCapture(e.pointerId); startDrag(e.clientX); });
-      track.addEventListener('pointermove', e => { if (isDragging) moveDrag(e.clientX); });
-      track.addEventListener('pointerup',   endDrag);
+      // Pointer events (desktop + stylus)
+      track.addEventListener('pointerdown',  e => { track.setPointerCapture(e.pointerId); startDrag(e.clientX); });
+      track.addEventListener('pointermove',  e => { if (isDragging) moveDrag(e.clientX); });
+      track.addEventListener('pointerup',    endDrag);
       track.addEventListener('pointercancel', endDrag);
     })();
 
