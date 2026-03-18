@@ -1079,7 +1079,7 @@
       .testimonial-card { width: 300px; padding: 32px 24px; }
 
       /* Numbers */
-      .numbers { padding: 12px 20px 32px; }
+      .numbers { padding: 0 20px 32px; }
       .numbers-grid { grid-template-columns: 1fr 1fr; }
       .num-cell { padding: 28px 20px; }
 
@@ -1113,8 +1113,10 @@
       .how-step   { padding: 14px 16px; }
       .how-step .step-num { margin-bottom: 10px; }
       .how-step .step-title { margin-bottom: 6px; }
-      .how { height: 600vh; }
-      .how-filtering { bottom: 12px; }
+      /* Extend scroll to give card 3 reading time; black bg stops blue bleed outside sticky panel */
+      .how { height: 600vh; background: var(--black); }
+      /* Restore filtering label — display: none was set at 900px breakpoint, undo it here */
+      .how-filtering { display: flex; bottom: 12px; }
 
       /* CTA */
       .cta-section { padding: 60px 20px; }
