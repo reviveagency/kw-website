@@ -989,6 +989,488 @@
       border: none;
     }
 
+    /* ─────────────────────────────────────────────────────
+       TRUST BAR
+    ─────────────────────────────────────────────────────── */
+    .trust-bar {
+      border-top: 1px solid var(--border-faint);
+      border-bottom: 1px solid var(--border-faint);
+      padding: 16px var(--pad);
+      overflow: hidden;
+    }
+    .trust-bar-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      white-space: nowrap;
+    }
+    .trust-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--blue);
+      flex-shrink: 0;
+    }
+
+    /* ─────────────────────────────────────────────────────
+       FLAGSHIP PROJECTS
+    ─────────────────────────────────────────────────────── */
+    .projects {
+      padding: 120px var(--pad);
+      border-top: 1px solid var(--border-faint);
+    }
+    .projects-inner { max-width: var(--max); margin: 0 auto; }
+    .projects-header { margin-bottom: 64px; }
+    .projects-h2 {
+      font-size: clamp(32px, 3.5vw, 52px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      max-width: 22ch;
+      margin-top: 16px;
+    }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border-faint);
+    }
+    .project-card {
+      background: var(--black);
+      display: flex;
+      flex-direction: column;
+    }
+    .project-img-wrap { position: relative; overflow: hidden; }
+    .project-img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      filter: brightness(0.72) saturate(0.8);
+      display: block;
+      transition: transform 0.6s var(--ease-out), filter 0.4s;
+    }
+    .project-card:hover .project-img { transform: scale(1.03); filter: brightness(0.8) saturate(0.9); }
+    .project-img-label {
+      position: absolute;
+      bottom: 14px; left: 16px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      pointer-events: none;
+    }
+    .project-body {
+      padding: 32px 36px 40px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .project-location {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+    .project-title {
+      font-size: 19px;
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+      color: var(--white);
+    }
+    .project-desc {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--gray-2);
+      flex: 1;
+    }
+    .project-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-faint);
+    }
+    .project-stat {
+      font-size: 13px;
+      color: var(--gray-1);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      line-height: 1.5;
+    }
+    .project-stat::before {
+      content: '→';
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--blue);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ─────────────────────────────────────────────────────
+       AUDIENCE SEGMENTATION — WHO IT'S FOR
+    ─────────────────────────────────────────────────────── */
+    .audience {
+      padding: 120px var(--pad);
+      border-top: 1px solid var(--border-faint);
+    }
+    .audience-inner { max-width: var(--max); margin: 0 auto; }
+    .audience-header { margin-bottom: 64px; }
+    .audience-h2 {
+      font-size: clamp(32px, 3.5vw, 52px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      max-width: 22ch;
+      margin-top: 16px;
+    }
+    .audience-panels {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border-faint);
+    }
+    .audience-panel {
+      background: var(--black);
+      padding: 52px 44px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      transition: background 0.2s;
+    }
+    .audience-panel:hover { background: rgba(255,255,255,0.025); }
+    .audience-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+    .audience-panel-h3 {
+      font-size: clamp(22px, 2.2vw, 30px);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+    .audience-panel-body {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.85;
+      color: var(--gray-2);
+      flex: 1;
+    }
+    .audience-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .audience-list li {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--gray-1);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      line-height: 1.55;
+    }
+    .aud-bullet {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: rgba(15,98,254,0.15);
+      border: 1px solid rgba(15,98,254,0.5);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .audience-panel-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      font-family: var(--mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 3px;
+      transition: color 0.2s, border-color 0.2s;
+      width: fit-content;
+    }
+    .audience-panel-cta:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
+
+    /* ─────────────────────────────────────────────────────
+       ABOUT KONTROLWATER
+    ─────────────────────────────────────────────────────── */
+    .about {
+      padding: 120px var(--pad);
+      border-top: 1px solid var(--border-faint);
+    }
+    .about-inner { max-width: var(--max); margin: 0 auto; }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: start;
+    }
+    .about-h2 {
+      font-size: clamp(32px, 3.5vw, 52px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      margin-top: 16px;
+      margin-bottom: 28px;
+    }
+    .about-body {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--gray-2);
+    }
+    .about-body p + p { margin-top: 20px; }
+    .about-creds {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      background: var(--border-faint);
+      margin-top: 52px;
+    }
+    .about-cred {
+      background: var(--black);
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .about-cred-value {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      color: var(--white);
+    }
+    .about-cred-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+    }
+    .about-img-wrap { position: relative; }
+    .about-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      filter: brightness(0.65) saturate(0.75);
+      display: block;
+    }
+    .about-img-caption {
+      position: absolute;
+      bottom: 16px; left: 18px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+    }
+    .about-img-tag {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid var(--border-faint);
+      backdrop-filter: blur(8px);
+      padding: 8px 14px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+    }
+
+    /* ─────────────────────────────────────────────────────
+       TESTIMONIAL AVATAR (addition to existing card styles)
+    ─────────────────────────────────────────────────────── */
+    .testimonial-author-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-top: 1px solid var(--border-faint);
+      padding-top: 24px;
+    }
+    .testimonial-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      filter: grayscale(0.3);
+    }
+
+    /* ─────────────────────────────────────────────────────
+       DISTRIBUTOR RESOURCES
+    ─────────────────────────────────────────────────────── */
+    .distrib {
+      padding: 120px var(--pad);
+      border-top: 1px solid var(--border-faint);
+      background: rgba(255,255,255,0.018);
+    }
+    .distrib-inner { max-width: var(--max); margin: 0 auto; }
+    .distrib-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: end;
+      margin-bottom: 60px;
+    }
+    .distrib-h2 {
+      font-size: clamp(32px, 3.5vw, 52px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      margin-top: 16px;
+    }
+    .distrib-sub {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.85;
+      color: var(--gray-2);
+    }
+    .distrib-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border-faint);
+      margin-bottom: 1px;
+    }
+    .distrib-card {
+      background: var(--black);
+      padding: 36px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: background 0.2s;
+    }
+    .distrib-card:hover { background: rgba(255,255,255,0.025); }
+    .distrib-type {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+    .distrib-title {
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.3;
+      color: var(--white);
+    }
+    .distrib-desc {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--gray-2);
+      flex: 1;
+    }
+    .distrib-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 400;
+      font-family: var(--mono);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      transition: color 0.2s;
+      margin-top: 4px;
+    }
+    .distrib-link:hover { color: var(--white); }
+    .distrib-partner {
+      background: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+      padding: 32px 40px;
+      border: 1px solid var(--border-faint);
+      flex-wrap: wrap;
+    }
+    .distrib-partner-text {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--gray-2);
+      max-width: 54ch;
+    }
+    .distrib-partner-text strong { color: var(--white); font-weight: 500; }
+
+    /* ─────────────────────────────────────────────────────
+       CTA — THREE AUDIENCE COLUMNS
+    ─────────────────────────────────────────────────────── */
+    .cta-triple {
+      padding: 120px var(--pad);
+      border-top: 1px solid var(--border-faint);
+    }
+    .cta-triple-inner { max-width: var(--max); margin: 0 auto; }
+    .cta-triple-header { margin-bottom: 64px; }
+    .cta-triple-h2 {
+      font-size: clamp(32px, 3.5vw, 52px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      max-width: 22ch;
+      margin-top: 16px;
+    }
+    .cta-panels {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border-faint);
+    }
+    .cta-panel {
+      background: var(--black);
+      padding: 52px 44px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .cta-panel-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+    }
+    .cta-panel-h3 {
+      font-size: clamp(20px, 2vw, 26px);
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+    .cta-panel-body {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--gray-2);
+      flex: 1;
+    }
+
     /* ─── Intro body grid (replaces inline style) ─── */
     .intro-body-grid {
       max-width: var(--max);
@@ -1027,6 +1509,20 @@
       .metric-cell:nth-child(2) { border-right: none; }
 
       .testimonials-header { flex-direction: column; align-items: flex-start; gap: 20px; }
+
+      /* New sections — tablet */
+      .projects { padding: 80px var(--pad); }
+      .projects-grid { grid-template-columns: 1fr; }
+      .audience { padding: 80px var(--pad); }
+      .audience-panels { grid-template-columns: 1fr; }
+      .about { padding: 80px var(--pad); }
+      .about-grid { grid-template-columns: 1fr; gap: 48px; }
+      .distrib { padding: 80px var(--pad); }
+      .distrib-header { grid-template-columns: 1fr; gap: 32px; }
+      .distrib-grid { grid-template-columns: repeat(2, 1fr); }
+      .distrib-partner { padding: 28px 32px; }
+      .cta-triple { padding: 80px var(--pad); }
+      .cta-panels { grid-template-columns: 1fr; }
     }
 
     /* ─────────────────────────────────────────────────────
@@ -1135,6 +1631,25 @@
       .btn-primary, .btn-ghost { width: 100%; justify-content: center; padding: 16px 24px; }
       .hero-actions { flex-direction: column; }
 
+      /* New sections — mobile */
+      .trust-bar { padding: 16px 20px; }
+      .trust-bar-inner { gap: 14px; }
+      .projects { padding: 60px 20px; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .project-body { padding: 24px 24px 32px; }
+      .audience { padding: 60px 20px; }
+      .audience-panels { grid-template-columns: 1fr; }
+      .audience-panel { padding: 36px 24px; gap: 18px; }
+      .about { padding: 60px 20px; }
+      .about-grid { grid-template-columns: 1fr; gap: 36px; }
+      .about-creds { grid-template-columns: repeat(3, 1fr); }
+      .distrib { padding: 60px 20px; }
+      .distrib-header { grid-template-columns: 1fr; gap: 24px; }
+      .distrib-grid { grid-template-columns: 1fr; }
+      .distrib-partner { flex-direction: column; align-items: flex-start; padding: 24px; gap: 24px; }
+      .cta-triple { padding: 60px 20px; }
+      .cta-panels { grid-template-columns: 1fr; }
+      .cta-panel { padding: 36px 24px; }
     }
   </style>
 </head>
@@ -1150,10 +1665,11 @@
     </a>
     <ul class="nav-links">
       <li><a href="#how-it-works">How It Works</a></li>
-      <li><a href="#specifications">Specifications</a></li>
+      <li><a href="#case-studies">Case Studies</a></li>
+      <li><a href="#who-its-for">Who It's For</a></li>
       <li><a href="#compare">Compare</a></li>
     </ul>
-    <a href="#contact" class="nav-cta">Request a Demo</a>
+    <a href="#contact" class="nav-cta">Book a Demo</a>
     <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu">
       <span></span><span></span><span></span>
     </button>
@@ -1162,9 +1678,10 @@
   <!-- Mobile nav drawer -->
   <div class="nav-mobile-menu" id="nav-mobile-menu">
     <a href="#how-it-works">How It Works</a>
-    <a href="#specifications">Specifications</a>
+    <a href="#case-studies">Case Studies</a>
+    <a href="#who-its-for">Who It's For</a>
     <a href="#compare">Compare</a>
-    <a href="#contact" class="nav-cta-mobile">Request a Demo</a>
+    <a href="#contact" class="nav-cta-mobile">Book a Demo</a>
   </div>
 
   <!-- ═══════════════════════════════════════════
@@ -1180,14 +1697,14 @@
 
     <div class="hero-content">
       <h1 class="hero-h1">
-        Intelligent pool management.<br />Zero effort.
+        Your pool.<br />Always ready.
       </h1>
       <p class="hero-sub">
-        KontrolWater monitors, adjusts, and maintains your pool autonomously — 24 hours a day, without human intervention.
+        KontrolWater continuously monitors water chemistry, doses automatically, and self-corrects in real time — 24 hours a day, without a technician, without a schedule, without compromise.
       </p>
       <div class="hero-actions">
         <a href="#contact" class="btn-primary">
-          Request a Demo
+          Book a Demo
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
@@ -1203,6 +1720,20 @@
   </section>
 
   <!-- ═══════════════════════════════════════════
+       TRUST BAR
+  ═══════════════════════════════════════════════ -->
+  <div class="trust-bar">
+    <div class="trust-bar-inner">
+      <div class="trust-item"><span class="trust-dot"></span>Installed across 12+ countries</div>
+      <div class="trust-item"><span class="trust-dot"></span>European-engineered &amp; manufactured</div>
+      <div class="trust-item"><span class="trust-dot"></span>99% fleet uptime</div>
+      <div class="trust-item"><span class="trust-dot"></span>CE certified</div>
+      <div class="trust-item"><span class="trust-dot"></span>&lt; 4 hr installation</div>
+      <div class="trust-item"><span class="trust-dot"></span>5-year warranty</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
        INTRO STATEMENT
   ═══════════════════════════════════════════════ -->
   <section class="intro">
@@ -1214,13 +1745,13 @@
       <div></div>
     </div>
     <div class="intro-body-grid">
-      <h2 class="intro-h2" id="tw-heading" data-text="The pool manages itself. You enjoy it." style="visibility:hidden"></h2>
+      <h2 class="intro-h2" id="tw-heading" data-text="The pool manages itself. You do something else." style="visibility:hidden"></h2>
       <div class="intro-body sr">
         <p>
-          Traditional pool systems require constant manual attention — testing, adjusting chemicals, cleaning filters, monitoring pumps. KontrolWater replaces all of that with a single, self-contained intelligent unit.
+          Managing pool chemistry manually means weekly service calls, daily testing, emergency call-outs when something drifts — and one missed reading away from a closure, a complaint, or a health risk.
         </p>
         <p>
-          Installed directly into your existing plumbing, KontrolWater continuously reads water chemistry, flow rate, temperature, and filter pressure. It responds in real time — no schedules, no guesswork, no service calls.
+          KontrolWater installs directly into your existing plant room. From that point, it reads the water every 10 seconds, calculates the precise correction needed, and doses it automatically. No schedules. No approximations. No service dependency.
         </p>
       </div>
     </div>
@@ -1255,6 +1786,132 @@
   </section>
 
   <!-- ═══════════════════════════════════════════
+       FLAGSHIP PROJECTS
+  ═══════════════════════════════════════════════ -->
+  <section class="projects" id="case-studies">
+    <div class="projects-inner">
+      <div class="projects-header sr">
+        <span class="label">Where KontrolWater Operates</span>
+        <h2 class="projects-h2">Already running at the standard you expect.</h2>
+      </div>
+      <div class="projects-grid">
+
+        <div class="project-card sr sr-stagger" style="--stagger-delay:0ms">
+          <div class="project-img-wrap">
+            <img class="project-img"
+              src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80"
+              alt="Luxury resort pool, Dubai" />
+            <span class="project-img-label">Stock · replace with real photography</span>
+          </div>
+          <div class="project-body">
+            <div class="project-location">Dubai, UAE</div>
+            <div class="project-title">Five-Star Resort — 3 Pools</div>
+            <p class="project-desc">Deployed ahead of a full resort opening. KontrolWater maintained consistent water chemistry across all three pools during peak occupancy without a single call-out throughout the first season.</p>
+            <div class="project-stats">
+              <div class="project-stat">Chemical spend reduced 64% vs. prior system</div>
+              <div class="project-stat">Zero unplanned closures — 18 months of operation</div>
+              <div class="project-stat">3 pools, 2,400 m² total water surface</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card sr sr-stagger" style="--stagger-delay:120ms">
+          <div class="project-img-wrap">
+            <img class="project-img"
+              src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=800&q=80"
+              alt="National aquatics centre competitive pool" />
+            <span class="project-img-label">Stock · replace with real photography</span>
+          </div>
+          <div class="project-body">
+            <div class="project-location">United Kingdom</div>
+            <div class="project-title">National Aquatics Centre — Competition Pool</div>
+            <p class="project-desc">Olympic-specification water quality required year-round for competitive events. Manual testing reduced from daily to weekly review while maintaining compliance across every meet.</p>
+            <div class="project-stats">
+              <div class="project-stat">Compliant across 38 consecutive competitive events</div>
+              <div class="project-stat">Staff time on water management down 80%</div>
+              <div class="project-stat">6-lane, 50 m competition pool</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card sr sr-stagger" style="--stagger-delay:240ms">
+          <div class="project-img-wrap">
+            <img class="project-img"
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"
+              alt="Managed luxury residential estate pools" />
+            <span class="project-img-label">Stock · replace with real photography</span>
+          </div>
+          <div class="project-body">
+            <div class="project-location">Marbella, Spain</div>
+            <div class="project-title">Luxury Residential Estate — 12 Pools</div>
+            <p class="project-desc">Centralised monitoring across 12 private pools from a single dashboard. Estate management alerted in real time when parameters drift — before any visible issue develops.</p>
+            <div class="project-stats">
+              <div class="project-stat">All 12 pools deployed in under 3 days</div>
+              <div class="project-stat">Service visits reduced from weekly to quarterly</div>
+              <div class="project-stat">Single dashboard, full estate visibility</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       AUDIENCE SEGMENTATION — WHO IT'S FOR
+  ═══════════════════════════════════════════════ -->
+  <section class="audience" id="who-its-for">
+    <div class="audience-inner">
+      <div class="audience-header sr">
+        <span class="label">Who It's For</span>
+        <h2 class="audience-h2">The right message depends on who's reading it.</h2>
+      </div>
+      <div class="audience-panels">
+
+        <div class="audience-panel sr sr-stagger" style="--stagger-delay:0ms">
+          <div class="audience-tag">Pool Owners</div>
+          <h3 class="audience-panel-h3">Your pool.<br />Running itself.</h3>
+          <p class="audience-panel-body">You didn't buy a pool to spend weekends managing it. KontrolWater handles everything automatically — chemistry, dosing, filter monitoring, alerts. Check your pool's status from your phone, anywhere in the world. Know something's wrong before anything goes wrong.</p>
+          <ul class="audience-list">
+            <li><span class="aud-bullet"></span>No service visits required</li>
+            <li><span class="aud-bullet"></span>Real-time status from your phone</li>
+            <li><span class="aud-bullet"></span>Consistent water quality, every day</li>
+            <li><span class="aud-bullet"></span>Lower running costs from month one</li>
+          </ul>
+          <a href="#contact" class="audience-panel-cta">Book a demo →</a>
+        </div>
+
+        <div class="audience-panel sr sr-stagger" style="--stagger-delay:120ms">
+          <div class="audience-tag">Installers &amp; Trade</div>
+          <h3 class="audience-panel-h3">Install once.<br />Walk away confident.</h3>
+          <p class="audience-panel-body">KontrolWater is designed to retrofit any existing pool plant room in under 4 hours — no structural work, no specialist certification, no complicated commissioning. Once installed, it runs itself. Your client stops calling. You move to the next job.</p>
+          <ul class="audience-list">
+            <li><span class="aud-bullet"></span>Compatible with all standard plant room configurations</li>
+            <li><span class="aud-bullet"></span>Typical install time under 4 hours</li>
+            <li><span class="aud-bullet"></span>Significantly reduces your callback rate</li>
+            <li><span class="aud-bullet"></span>Remote diagnostics — resolve issues without a site visit</li>
+          </ul>
+          <a href="#contact" class="audience-panel-cta">Download installer guide →</a>
+        </div>
+
+        <div class="audience-panel sr sr-stagger" style="--stagger-delay:240ms">
+          <div class="audience-tag">Commercial &amp; Facilities</div>
+          <h3 class="audience-panel-h3">Compliant.<br />Efficient.<br />Always on.</h3>
+          <p class="audience-panel-body">For hotels, health clubs, schools, and municipalities, water quality is regulatory — not optional. KontrolWater maintains compliance automatically, provides centralised monitoring across multiple sites, and delivers measurable cost savings from the first billing cycle.</p>
+          <ul class="audience-list">
+            <li><span class="aud-bullet"></span>Continuous compliance — no gaps, no surprises</li>
+            <li><span class="aud-bullet"></span>Centralised dashboard for multi-site operators</li>
+            <li><span class="aud-bullet"></span>Up to 70% reduction in chemical spend</li>
+            <li><span class="aud-bullet"></span>Data logs for audit and inspection requirements</li>
+          </ul>
+          <a href="#contact" class="audience-panel-cta">Request a commercial proposal →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
        HOW IT WORKS — scroll-driven + SVG diagram
   ═══════════════════════════════════════════════ -->
   <section class="how" id="how-it-works">
@@ -1264,9 +1921,9 @@
 
       <div class="how-inner">
         <div class="how-header">
-          <h2 class="how-h2 sr">Autonomous. Precise. Uninterrupted.</h2>
+          <h2 class="how-h2 sr">Three functions.<br />Running simultaneously.<br />Every second.</h2>
           <p class="how-sub sr">
-            Three core functions operating simultaneously, every second of every day.
+            Most pool systems do one thing at a time. KontrolWater runs three core processes continuously — sensing, dosing, and predicting — without pause, without manual input, without relying on a scheduled visit.
           </p>
         </div>
 
@@ -1276,21 +1933,21 @@
             <div class="step-num">01</div>
             <div class="step-title">Continuous Sensing</div>
             <p class="step-body">
-              Embedded probes measure pH, ORP, temperature, conductivity, and flow at 10-second intervals. No manual testing. No estimation.
+              Twelve embedded probes measure pH, ORP, temperature, conductivity, flow rate, and filter pressure — taking a complete reading every 10 seconds. Manual testing happens once a day at best. By the time a problem is detected, it's already a problem. KontrolWater never stops checking.
             </p>
           </div>
           <div class="how-step" data-step="2">
             <div class="step-num">02</div>
             <div class="step-title">Intelligent Dosing</div>
             <p class="step-body">
-              KontrolWater calculates the precise chemical correction required and doses automatically via peristaltic pumps — accurate to within 0.01 pH.
+              Based on live sensor data, KontrolWater calculates the exact chemical correction required and delivers it via peristaltic pumps — accurate to ±0.01 pH. Over-dosing wastes spend and irritates swimmers. Under-dosing creates compliance risk. KontrolWater doses precisely what's needed, when it's needed.
             </p>
           </div>
           <div class="how-step" data-step="3">
             <div class="step-num">03</div>
             <div class="step-title">Predictive Alerts</div>
             <p class="step-body">
-              Machine learning models identify degradation patterns before they manifest. Maintenance teams receive alerts before there is a problem to solve.
+              Pattern recognition tracks degradation across sensors, dosing frequency, and pressure differentials. A blocked filter, a failing pump, or a chemical imbalance each give signals days before they become critical. KontrolWater reads those signals. You receive a notification instead of an emergency.
             </p>
           </div>
         </div><!-- .how-steps -->
@@ -1369,7 +2026,7 @@
       <div class="diff-content">
         <h2 class="diff-h2"
           id="diff-tw-heading"
-          data-text="Why KontrolWater outperforms traditional pool management."
+          data-text="What continuous monitoring actually changes."
           style="visibility:hidden"></h2>
         <div class="diff-table-wrap">
         <table class="diff-table">
@@ -1432,97 +2089,243 @@
   </section>
 
   <!-- ═══════════════════════════════════════════
-       TESTIMONIALS
+       ABOUT KONTROLWATER
   ═══════════════════════════════════════════════ -->
-  <section class="testimonials">
-    <div class="testimonials-header">
-      <h2 class="testimonials-h2 sr">Trusted by operators who demand more from their pools.</h2>
-      <p class="testimonials-sub sr">From luxury resorts to commercial health clubs — KontrolWater performs where standards are highest.</p>
-    </div>
-    <div class="testimonials-track">
-      <div class="testimonial-card">
-        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
-        <p class="testimonial-quote">"We had a technician visiting twice a week. Since KontrolWater was installed, we haven't had a single call-out. The water quality is consistently better than we ever managed manually — and our chemical costs have dropped by over 60%."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-name">James Harrington</div>
-          <div class="testimonial-role">Head of Facilities · The Langford Hotel &amp; Spa</div>
+  <section class="about" id="about">
+    <div class="about-inner">
+      <div class="about-grid">
+        <div>
+          <div class="sr">
+            <span class="label">Who We Are</span>
+            <h2 class="about-h2">Engineered in Europe.<br />Built for operators who can't afford problems.</h2>
+          </div>
+          <div class="about-body sr">
+            <p>KontrolWater was developed by engineers with backgrounds in industrial water treatment, building management systems, and IoT sensor networks. We built the system because we kept seeing the same problem: pool chemistry managed on instinct, on schedules, and on hope.</p>
+            <p>Every KontrolWater unit is manufactured and quality-tested at our European facility before shipping. We supply through certified distributors and installation partners across 12+ countries, and we back every installation with a 5-year warranty and dedicated remote technical support.</p>
+            <p>We don't sell the idea of automation. We sell systems that have been operating at scale, in real conditions, producing measurable results.</p>
+          </div>
+          <div class="about-creds sr">
+            <div class="about-cred">
+              <div class="about-cred-value">12+</div>
+              <div class="about-cred-label">Countries</div>
+            </div>
+            <div class="about-cred">
+              <div class="about-cred-value">99%</div>
+              <div class="about-cred-label">Fleet uptime</div>
+            </div>
+            <div class="about-cred">
+              <div class="about-cred-value">CE</div>
+              <div class="about-cred-label">Certified</div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
-        <p class="testimonial-quote">"Our members train six days a week. Pool chemistry needs to be exact, every session. KontrolWater manages it without us thinking about it. The system flagged a filter issue three days before it would have caused a closure — that alone justified the investment."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-name">Sarah Okonkwo</div>
-          <div class="testimonial-role">Operations Director · Meridian Athletic Club</div>
-        </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
-        <p class="testimonial-quote">"We manage twelve residential pools across the estate. Coordinating service schedules was a constant overhead. KontrolWater gave us centralised visibility and eliminated most of the manual work entirely. Installation across all sites took less than three days."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-name">Daniel Reyes</div>
-          <div class="testimonial-role">Estate Manager · Vantage Residential Group</div>
-        </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
-        <p class="testimonial-quote">"We tested KontrolWater across three commercial pools before rolling it out nationwide. The results were consistent — balanced chemistry, fewer shutdowns, and a 35% drop in chemical spend. Our lifeguards now focus on safety, not maintenance."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-name">Maria Toscano</div>
-          <div class="testimonial-role">Head of Aquatics · FitLife National Group</div>
-        </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
-        <p class="testimonial-quote">"I spend most of the year abroad. Having KontrolWater meant I could check my pool's status from anywhere and trust that nothing would go wrong while I was away. It's run flawlessly for fourteen months."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-name">Thomas Eriksson</div>
-          <div class="testimonial-role">Private Residence · Marbella</div>
-        </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
-        <p class="testimonial-quote">"Water quality is a guest expectation we can't afford to miss. KontrolWater gave us real-time oversight we didn't have before — and the ROI was clear within the first quarter."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-name">Priya Mehra</div>
-          <div class="testimonial-role">General Manager · The Clifton Bay Resort</div>
-        </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
-        <p class="testimonial-quote">"We run competitive swim meets with strict water quality requirements. KontrolWater keeps us compliant without constant manual checks. Our team went from daily testing to a weekly review."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-name">Michael Brandt</div>
-          <div class="testimonial-role">Facilities Director · Northshore Aquatic Centre</div>
-        </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
-        <p class="testimonial-quote">"We specified KontrolWater across all fifteen pools in our new development. Buyers love the connected feature — it's become part of the sales pitch. Smart home means smart pool."</p>
-        <div class="testimonial-author">
-          <div class="testimonial-name">Isabelle Fontaine</div>
-          <div class="testimonial-role">Development Director · Premier Living Estates</div>
+        <div class="about-img-wrap sr">
+          <img class="about-img"
+            src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=800&q=80"
+            alt="KontrolWater manufacturing facility" />
+          <span class="about-img-caption">Manufacturing · European facility</span>
+          <span class="about-img-tag">Stock · replace with real photography</span>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ═══════════════════════════════════════════
-       CTA
+       TESTIMONIALS
   ═══════════════════════════════════════════════ -->
-  <section class="cta-section" id="contact">
-    <div class="cta-inner">
-      <h2 class="cta-h2 sr">
-        Ready to eliminate pool maintenance entirely?
-      </h2>
-      <div class="cta-actions sr">
-        <a href="#" class="btn-primary">
-          Request a Demo
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-        <a href="#" class="btn-ghost">Download Spec Sheet</a>
+  <section class="testimonials">
+    <div class="testimonials-header">
+      <h2 class="testimonials-h2 sr">Trusted by operators who can't afford to get it wrong.</h2>
+      <p class="testimonials-sub sr">From private residences to national health clubs — KontrolWater performs where standards are highest.</p>
+    </div>
+    <div class="testimonials-track">
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="testimonial-quote">"Honestly, I wasn't sure we needed it — we had a reliable technician and a system that mostly worked. Six months in, I can't imagine going back. The chemistry is tighter than it's ever been and we've had exactly zero call-outs. What sold me was watching it catch a filter issue on a Tuesday morning, four days before our previous system would have flagged anything."</p>
+        <div class="testimonial-author-row">
+          <img class="testimonial-avatar" src="https://i.pravatar.cc/80?img=12" alt="James Harrington" />
+          <div>
+            <div class="testimonial-name">James Harrington</div>
+            <div class="testimonial-role">Head of Facilities · The Langford Hotel &amp; Spa</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="testimonial-quote">"We ran it as a pilot across three sites before committing nationally. I expected it to work — I didn't expect it to work that consistently. 35% drop in chemical spend, every site. Our lifeguard team went from daily water testing to a weekly review. That's real time back in the day."</p>
+        <div class="testimonial-author-row">
+          <img class="testimonial-avatar" src="https://i.pravatar.cc/80?img=47" alt="Maria Toscano" />
+          <div>
+            <div class="testimonial-name">Maria Toscano</div>
+            <div class="testimonial-role">Head of Aquatics · FitLife National Group</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="testimonial-quote">"We manage twelve residential pools across the estate. Coordinating weekly service schedules was a constant overhead. KontrolWater gave us centralised visibility across all twelve from a single dashboard. Service visits went from weekly to quarterly. Installation took less than three days."</p>
+        <div class="testimonial-author-row">
+          <img class="testimonial-avatar" src="https://i.pravatar.cc/80?img=33" alt="Daniel Reyes" />
+          <div>
+            <div class="testimonial-name">Daniel Reyes</div>
+            <div class="testimonial-role">Estate Manager · Vantage Residential Group</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="testimonial-quote">"Our members train six days a week. Chemistry needs to be exact, every session. KontrolWater manages it without us thinking about it — it flagged a filter issue three days before it would have caused a closure. That one event alone justified the investment."</p>
+        <div class="testimonial-author-row">
+          <img class="testimonial-avatar" src="https://i.pravatar.cc/80?img=45" alt="Sarah Okonkwo" />
+          <div>
+            <div class="testimonial-name">Sarah Okonkwo</div>
+            <div class="testimonial-role">Operations Director · Meridian Athletic Club</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="testimonial-quote">"I'm in Stockholm most of the year. The pool was always the thing I'd come home to and find wasn't right — chemistry drifted every time. Now I get a notification if anything goes outside range. Fourteen months, zero problems."</p>
+        <div class="testimonial-author-row">
+          <img class="testimonial-avatar" src="https://i.pravatar.cc/80?img=22" alt="Thomas Eriksson" />
+          <div>
+            <div class="testimonial-name">Thomas Eriksson</div>
+            <div class="testimonial-role">Private Residence · Marbella</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="testimonial-quote">"Water quality is a guest expectation we can't afford to miss. KontrolWater gave us real-time oversight we simply didn't have before. The ROI was clear within the first quarter — and it's the kind of system you stop thinking about, which is exactly the point."</p>
+        <div class="testimonial-author-row">
+          <img class="testimonial-avatar" src="https://i.pravatar.cc/80?img=56" alt="Priya Mehra" />
+          <div>
+            <div class="testimonial-name">Priya Mehra</div>
+            <div class="testimonial-role">General Manager · The Clifton Bay Resort</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="testimonial-quote">"We run competitive swim meets with strict compliance requirements. KontrolWater keeps us to specification without constant manual checks. Our team went from daily testing to a weekly review and we've maintained compliance across thirty-eight consecutive events."</p>
+        <div class="testimonial-author-row">
+          <img class="testimonial-avatar" src="https://i.pravatar.cc/80?img=8" alt="Michael Brandt" />
+          <div>
+            <div class="testimonial-name">Michael Brandt</div>
+            <div class="testimonial-role">Facilities Director · Northshore Aquatic Centre</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="testimonial-quote">"We specified KontrolWater across all fifteen pools in the development. Buyers ask about smart home features during handover and we include pool management in that conversation now. First time I'd thought of it as a selling point, not just infrastructure."</p>
+        <div class="testimonial-author-row">
+          <img class="testimonial-avatar" src="https://i.pravatar.cc/80?img=39" alt="Isabelle Fontaine" />
+          <div>
+            <div class="testimonial-name">Isabelle Fontaine</div>
+            <div class="testimonial-role">Development Director · Premier Living Estates</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       DISTRIBUTOR RESOURCES
+  ═══════════════════════════════════════════════ -->
+  <section class="distrib" id="distributors">
+    <div class="distrib-inner">
+      <div class="distrib-header">
+        <div class="sr">
+          <span class="label">For Distributors &amp; Trade</span>
+          <h2 class="distrib-h2">Everything you need to close the sale.</h2>
+        </div>
+        <p class="distrib-sub sr">KontrolWater is sold exclusively through certified distributors and installation partners. These resources are built to support your sales conversations — from first introduction to sign-off.</p>
+      </div>
+      <div class="distrib-grid">
+        <div class="distrib-card sr sr-stagger" style="--stagger-delay:0ms">
+          <div class="distrib-type">PDF Download</div>
+          <div class="distrib-title">Product Overview</div>
+          <p class="distrib-desc">The key facts in a format you can forward to any client. One page. No fluff.</p>
+          <a href="#" class="distrib-link">Download ↗</a>
+        </div>
+        <div class="distrib-card sr sr-stagger" style="--stagger-delay:80ms">
+          <div class="distrib-type">PDF Download</div>
+          <div class="distrib-title">Technical Specification Sheet</div>
+          <p class="distrib-desc">Full installation requirements, compatibility table, dimensions, and electrical specifications.</p>
+          <a href="#" class="distrib-link">Download ↗</a>
+        </div>
+        <div class="distrib-card sr sr-stagger" style="--stagger-delay:160ms">
+          <div class="distrib-type">PDF Download</div>
+          <div class="distrib-title">ROI Calculator — Commercial</div>
+          <p class="distrib-desc">Input pool count, current chemical spend, and visit frequency. Output: payback period and 3-year savings.</p>
+          <a href="#" class="distrib-link">Download ↗</a>
+        </div>
+        <div class="distrib-card sr sr-stagger" style="--stagger-delay:240ms">
+          <div class="distrib-type">PDF Download</div>
+          <div class="distrib-title">Installer Guide</div>
+          <p class="distrib-desc">Step-by-step integration guide for standard plant room setups. Covers all major pump and filter configurations.</p>
+          <a href="#" class="distrib-link">Download ↗</a>
+        </div>
+      </div>
+      <div class="distrib-partner sr">
+        <p class="distrib-partner-text"><strong>Not yet a distributor?</strong> KontrolWater is expanding its certified partner network. If you're an installer or trade supplier looking to add a premium, low-maintenance product to your offering, we'd like to hear from you.</p>
+        <a href="#contact" class="btn-ghost">Apply for Partnership →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       CTA — THREE AUDIENCE COLUMNS
+  ═══════════════════════════════════════════════ -->
+  <section class="cta-triple" id="contact">
+    <div class="cta-triple-inner">
+      <div class="cta-triple-header sr">
+        <span class="label">Get Started</span>
+        <h2 class="cta-triple-h2">The right next step depends on who you are.</h2>
+      </div>
+      <div class="cta-panels">
+
+        <div class="cta-panel sr sr-stagger" style="--stagger-delay:0ms">
+          <div class="cta-panel-tag">Pool Owners</div>
+          <h3 class="cta-panel-h3">See what KontrolWater looks like on your installation.</h3>
+          <p class="cta-panel-body">Book a 20-minute call with a KontrolWater specialist. We'll walk through your current setup, explain exactly what changes, and give you a clear picture of what to expect.</p>
+          <a href="#" class="btn-primary">
+            Book a 20-Minute Demo
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="cta-panel sr sr-stagger" style="--stagger-delay:120ms">
+          <div class="cta-panel-tag">Installers &amp; Trade</div>
+          <h3 class="cta-panel-h3">Get the full technical pack and installation guide.</h3>
+          <p class="cta-panel-body">Download the complete installer documentation — compatibility tables, wiring diagrams, commissioning checklist, and dimensions. Everything you need before showing a client.</p>
+          <a href="#" class="btn-ghost">Download Installer Pack</a>
+        </div>
+
+        <div class="cta-panel sr sr-stagger" style="--stagger-delay:240ms">
+          <div class="cta-panel-tag">Commercial &amp; Facilities</div>
+          <h3 class="cta-panel-h3">Get a proposal tailored to your sites and pool type.</h3>
+          <p class="cta-panel-body">Tell us how many pools, what type of facility, and your current maintenance overhead. We'll send a commercial proposal with projected savings and a clear payback timeline.</p>
+          <a href="#" class="btn-primary">
+            Request a Commercial Quote
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+
       </div>
     </div>
   </section>
