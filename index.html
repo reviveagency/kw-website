@@ -1079,7 +1079,7 @@
       .testimonial-card { width: 300px; padding: 32px 24px; }
 
       /* Numbers */
-      .numbers { padding: 32px 20px; }
+      .numbers { padding: 12px 20px 32px; }
       .numbers-grid { grid-template-columns: 1fr 1fr; }
       .num-cell { padding: 28px 20px; }
 
@@ -1088,14 +1088,14 @@
       .setup-sticky {
         top: 64px;
         height: calc(100vh - 64px);
-        padding: 20px 20px 20px;
+        padding: 36px 20px 20px;
         justify-content: flex-start;
       }
       .setup-header { grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px; }
 
       /* Diff table — reduce top space, hide Manual Management column */
       .diff { height: 260vh; }
-      .diff-inner { padding: 24px 20px 20px; }
+      .diff-inner { padding: 16px 20px 20px; }
       .diff-h2 { margin-bottom: 20px; font-size: clamp(22px, 6vw, 38px); }
       .diff-table-wrap { overflow: visible; }
       .diff-table { min-width: 0; width: 100%; }
@@ -1105,8 +1105,8 @@
       .diff-table th:first-child  { font-size: 8px; }
       .diff-table th:not(:first-child) { font-size: 8px; }
 
-      /* How It Works — clear nav bar, compact cards */
-      .how-sticky { justify-content: flex-start; padding-top: 16px; }
+      /* How It Works — clear nav bar, compact cards, filtering label restored */
+      .how-sticky { justify-content: flex-start; padding-top: 32px; }
       .how-inner { padding: 0 20px; }
       .how-header { grid-template-columns: 1fr; gap: 10px; margin-bottom: 12px; }
       .how-steps  { grid-template-columns: 1fr; }
@@ -1114,7 +1114,7 @@
       .how-step .step-num { margin-bottom: 10px; }
       .how-step .step-title { margin-bottom: 6px; }
       .how { height: 600vh; }
-      .how-filtering { display: none; }
+      .how-filtering { bottom: 12px; }
 
       /* CTA */
       .cta-section { padding: 60px 20px; }
