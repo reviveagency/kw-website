@@ -516,6 +516,10 @@
       max-width: var(--max);
       margin: 0 auto;
       width: 100%;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
     }
     .setup-header {
       display: grid;
@@ -539,6 +543,10 @@
     /* Blueprint diagram — JS drives clip-path via scroll */
     .setup-diagram {
       width: 100%;
+      flex: 1;
+      min-height: 0;
+      object-fit: contain;
+      object-position: left center;
       display: block;
       filter: invert(1) brightness(0.92);
       border: 1px solid var(--border-faint);
