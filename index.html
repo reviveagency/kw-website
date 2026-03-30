@@ -728,8 +728,8 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 80px;
-      align-items: end;
-      margin-bottom: 60px;
+      align-items: start;
+      margin-bottom: 52px;
     }
     .how-h2 {
       font-size: clamp(32px, 3.5vw, 52px);
@@ -737,57 +737,83 @@
       line-height: 1.1;
       letter-spacing: -0.025em;
       color: var(--white);
+      position: sticky;
+      top: calc(64px + 40px); /* anchors to top of viewport as sub scrolls */
     }
     .how-sub {
       font-size: 15px;
       font-weight: 300;
-      line-height: 1.8;
-      color: rgba(255,255,255,0.72);
+      line-height: 1.85;
+      color: rgba(255,255,255,0.62);
     }
-    /* Steps grid — SVG positioned behind */
+    .how-sub + .how-sub { margin-top: 16px; }
+    .how-sub-emphasis {
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.88);
+      margin-top: 20px;
+      letter-spacing: 0.005em;
+    }
+    /* "What replaces it:" bridge line */
+    .how-transition {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 40px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    /* Steps — open layout, no boxes */
     .how-steps {
       position: relative;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border-faint);
+      gap: 0 56px;
+      background: transparent;
     }
-    /* Each step starts hidden; JS adds .step-active */
+    /* Each process starts obscured; JS adds .step-active to clarify */
     .how-step {
-      background: rgba(7,10,15,0.82);
-      backdrop-filter: blur(2px);
-      border: 1px solid rgba(255,255,255,0.07);
-      padding: 52px 44px;
+      background: transparent;
+      padding: 0;
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 36px;
       position: relative;
       z-index: 1;
       opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 1s var(--ease-out), transform 1s var(--ease-out);
+      filter: blur(0.6px);
+      transform: translateY(8px);
+      transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out), filter 0.9s var(--ease-out);
     }
     .how-step.step-active {
       opacity: 1;
+      filter: none;
       transform: none;
     }
     .step-num {
       font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.16em;
-      color: var(--gray-3);
-      margin-bottom: 32px;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.28);
+      margin-bottom: 20px;
     }
     .step-title {
-      font-size: 20px;
+      font-size: 17px;
       font-weight: 500;
       letter-spacing: -0.015em;
       color: var(--white);
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .step-body {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 300;
       line-height: 1.75;
-      color: var(--gray-2);
+      color: rgba(255,255,255,0.58);
     }
+    .step-body p + p { margin-top: 8px; }
 
     /* ── Particle canvas — behind the sticky panel ── */
     .how-canvas {
@@ -798,15 +824,6 @@
       pointer-events: none;
       z-index: 0;
     }
-    /* Cards — transparent on blue, only text visible */
-    .how-step {
-      background: transparent !important;
-    }
-    .how-step .step-num   { color: rgba(255,255,255,0.45); }
-    .how-step .step-title { color: var(--white); }
-    .how-step .step-body  { color: rgba(255,255,255,0.72); }
-    /* Transparent gap between cards */
-    .how-steps { background: transparent; }
 
     /* ── Filtering status label ── */
     .how-filtering {
@@ -1656,9 +1673,10 @@
       .setup-header { grid-template-columns: 1fr; gap: 24px; margin-bottom: 36px; }
 
       .how-sticky { justify-content: flex-start; padding-top: 24px; }
-      .how-header { grid-template-columns: 1fr; gap: 16px; margin-bottom: 24px; }
-      .how-steps  { grid-template-columns: 1fr; }
-      .how-step   { padding: 22px 24px; }
+      .how-header { grid-template-columns: 1fr; gap: 20px; margin-bottom: 32px; }
+      .how-h2 { position: static; }
+      .how-steps  { grid-template-columns: 1fr; gap: 28px 0; }
+      .how-step   { padding-top: 28px; }
       .how-filtering { display: none; }
 
       .cta-inner   { grid-template-columns: 1fr; gap: 40px; }
@@ -1768,11 +1786,13 @@
       /* How It Works — clear nav bar, compact cards, filtering label restored */
       .how-sticky { justify-content: flex-start; padding-top: 32px; }
       .how-inner { padding: 0 20px; }
-      .how-header { grid-template-columns: 1fr; gap: 10px; margin-bottom: 12px; }
-      .how-steps  { grid-template-columns: 1fr; }
-      .how-step   { padding: 14px 16px; }
-      .how-step .step-num { margin-bottom: 10px; }
-      .how-step .step-title { margin-bottom: 6px; }
+      .how-header { grid-template-columns: 1fr; gap: 14px; margin-bottom: 24px; }
+      .how-h2 { position: static; }
+      .how-steps  { grid-template-columns: 1fr; gap: 24px 0; }
+      .how-step   { padding-top: 24px; }
+      .how-step .step-num { margin-bottom: 12px; }
+      .how-step .step-title { margin-bottom: 8px; }
+      .how-transition { margin-bottom: 28px; padding-top: 28px; }
       /* Extend scroll to give card 3 reading time */
       .how { height: 600vh; }
       /* Restore filtering label — display: none was set at 900px breakpoint, undo it here */
@@ -2096,34 +2116,41 @@
 
       <div class="how-inner">
         <div class="how-header">
-          <h2 class="how-h2 sr">Three processes.<br />Simultaneously.<br />Always.</h2>
-          <p class="how-sub sr">
-            Traditional systems wait for the next scheduled check. KontrolWater reads, calculates, and acts in real time — continuously, without human input.
-          </p>
+          <h2 class="how-h2 sr">Stop managing<br />your pool.</h2>
+          <div class="sr">
+            <p class="how-sub">Traditional pool management runs on schedules.</p>
+            <p class="how-sub">Weekly visits. Manual testing. Reactive fixes when something drifts. Miss a reading and you're dealing with wasted chemicals, poor water quality, or an urgent call-out.</p>
+            <p class="how-sub-emphasis">KontrolWater removes that entirely. It monitors, calculates, and corrects in real time — every 10 seconds.</p>
+            <p class="how-sub" style="margin-top:16px">No schedules. No guesswork. No calls.</p>
+          </div>
         </div>
 
+        <div class="how-transition sr">What replaces it</div>
+
         <div class="how-steps">
-          <!-- ── Feature cards ── -->
           <div class="how-step" data-step="1">
             <div class="step-num">01</div>
             <div class="step-title">Continuous Sensing</div>
-            <p class="step-body">
-              12 probes measure pH, ORP, temperature, conductivity, flow, and pressure every 10 seconds. Manual testing happens once a day at best — by the time a problem shows up, it's already a problem. KontrolWater never stops checking.
-            </p>
+            <div class="step-body">
+              <p>KontrolWater measures pH, ORP, temperature, flow, and pressure continuously — not once a day.</p>
+              <p>Issues are detected as they happen, not after the fact.</p>
+            </div>
           </div>
           <div class="how-step" data-step="2">
             <div class="step-num">02</div>
             <div class="step-title">Precise Dosing</div>
-            <p class="step-body">
-              KontrolWater calculates the exact correction needed and delivers it via peristaltic pumps — accurate to ±0.01 pH. Not approximately right. Exact. Over-dosing wastes money. Under-dosing creates risk. This does neither.
-            </p>
+            <div class="step-body">
+              <p>The system calculates exact chemical corrections and delivers them automatically.</p>
+              <p>No over-dosing. No under-dosing. Just stable water.</p>
+            </div>
           </div>
           <div class="how-step" data-step="3">
             <div class="step-num">03</div>
             <div class="step-title">Predictive Alerts</div>
-            <p class="step-body">
-              Pattern recognition identifies degradation before it becomes a failure. A blocked filter, a failing pump, or a pressure drop each signal days in advance. You get a notification. Not an emergency.
-            </p>
+            <div class="step-body">
+              <p>Degradation is detected early — before it becomes failure.</p>
+              <p>You get notified in advance. Not when something breaks.</p>
+            </div>
           </div>
         </div><!-- .how-steps -->
       </div><!-- .how-inner -->
@@ -2853,7 +2880,7 @@
         MIN_R:  0.4,
         MAX_R:  1.8,
         BASE_A: 0.13,   // max opacity per particle
-        TURB:   0.0014, // turbulence jitter at vac=0
+        TURB:   0.002, // turbulence jitter at vac=0
         FLOW:   0.003,  // downward flow speed at vac=1
       };
 
