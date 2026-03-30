@@ -504,12 +504,12 @@
     }
     .setup-sticky {
       position: sticky;
-      top: 0;
-      height: 100vh;
+      top: 64px;
+      height: calc(100vh - 64px);
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 160px var(--pad) 60px;
+      padding: 80px var(--pad) 60px;
     }
     .setup-inner {
       max-width: var(--max);
@@ -1204,6 +1204,24 @@
       flex-shrink: 0;
       margin-top: 1px;
     }
+    .project-cta {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 12px 28px;
+      background: var(--blue);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      align-self: flex-start;
+    }
+    .project-cta:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
 
     /* ─────────────────────────────────────────────────────
        AUDIENCE SEGMENTATION — WHO IT'S FOR
@@ -1318,6 +1336,15 @@
       letter-spacing: -0.025em;
       margin-top: 16px;
       margin-bottom: 28px;
+    }
+    .about-origin {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-top: 12px;
+      margin-bottom: 32px;
     }
     .about-body {
       font-size: 15px;
@@ -1933,8 +1960,8 @@
   <section class="projects" id="case-studies">
     <div class="projects-inner">
       <div class="projects-header sr">
-        <span class="label">Proven Installations</span>
-        <h2 class="projects-h2">Already running at scale.</h2>
+        <span class="label">Flagship Projects</span>
+        <h2 class="projects-h2">Flagship projects, already running at scale.</h2>
       </div>
       <div class="projects-grid">
 
@@ -1954,6 +1981,7 @@
               <div class="project-stat">Zero unplanned closures — 18 months</div>
               <div class="project-stat">2,400 m² total water surface</div>
             </div>
+            <a href="#contact" class="project-cta">Dive in →</a>
           </div>
         </div>
 
@@ -1973,6 +2001,7 @@
               <div class="project-stat">Monitored remotely from Europe</div>
               <div class="project-stat">Infinity pool, 180 m² water surface</div>
             </div>
+            <a href="#contact" class="project-cta">Dive in →</a>
           </div>
         </div>
 
@@ -1992,6 +2021,7 @@
               <div class="project-stat">Chemical spend down 58%</div>
               <div class="project-stat">Single operator, full compound visibility</div>
             </div>
+            <a href="#contact" class="project-cta">Dive in →</a>
           </div>
         </div>
 
@@ -2186,7 +2216,8 @@
         <div>
           <div class="sr">
             <span class="label">Engineered in Europe</span>
-            <h2 class="about-h2">Built by engineers who refused to accept scheduled guesswork.</h2>
+            <h2 class="about-h2">Engineered in Europe. Built for precision.</h2>
+            <p class="about-origin sr">Designed and manufactured in Portugal.</p>
           </div>
           <div class="about-body sr">
             <p>Timer-based dosing systems don't know what's in the water. They add chemicals on a schedule — regardless of actual conditions. The result: over-dosing, under-dosing, and dependence on service visits to catch the difference. That's not pool management. It's reactive maintenance dressed up as a system.</p>
