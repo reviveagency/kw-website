@@ -1670,6 +1670,346 @@
     }
 
     /* ─────────────────────────────────────────────────────
+       APP VISIBILITY SECTION
+       Tuneable constants live in AV_CFG (JS block below).
+    ─────────────────────────────────────────────────────── */
+    .appvis {
+      position: relative;
+      height: 250vh;
+      background: #060a0e;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .appvis-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .appvis-sticky {
+      position: sticky;
+      top: 64px;
+      height: calc(100vh - 64px);
+      display: flex;
+      align-items: center;
+      z-index: 1;
+      padding: 0 var(--pad);
+    }
+    .appvis-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    /* ── Copy ── */
+    .appvis-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: var(--blue);
+      opacity: 0.75;
+      margin-bottom: 28px;
+    }
+    .appvis-h2 {
+      font-size: clamp(32px, 3.5vw, 52px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      margin-bottom: 28px;
+    }
+    .appvis-body {
+      margin-bottom: 40px;
+    }
+    .appvis-body p {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 8px;
+    }
+    .appvis-body p:last-child { margin-bottom: 0; }
+    /* ── Phone wrap ── */
+    .appvis-phone-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .appvis-phone {
+      width: 285px;
+      height: 578px;
+      background: #0e1318;
+      border-radius: 44px;
+      border: 1.5px solid rgba(255,255,255,0.10);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04),
+        inset 0 2px 4px rgba(255,255,255,0.03),
+        0 60px 180px rgba(0,0,0,0.85),
+        0 20px 60px rgba(0,0,0,0.50),
+        0 0 80px rgba(15,98,254,0.05);
+      position: relative;
+      overflow: hidden;
+    }
+    /* Dynamic island */
+    .appvis-pill {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 96px;
+      height: 30px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 10;
+    }
+    /* Screen */
+    .appvis-screen {
+      position: absolute;
+      inset: 0;
+      background: #05080c;
+      border-radius: 43px;
+      overflow: hidden;
+    }
+    /* ── App states ── */
+    .app-state {
+      position: absolute;
+      inset: 0;
+      padding: 58px 20px 20px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.65s var(--ease-out), transform 0.65s var(--ease-out);
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+    }
+    .app-state.active {
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+    }
+    /* App top bar */
+    .app-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .app-bar-name {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.30);
+    }
+    .app-bar-time {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: rgba(255,255,255,0.50);
+    }
+    /* Running status badge */
+    .app-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(74,222,128,0.06);
+      border: 1px solid rgba(74,222,128,0.18);
+      border-radius: 20px;
+      padding: 5px 12px;
+      margin-bottom: 20px;
+      width: fit-content;
+    }
+    .app-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 6px rgba(74,222,128,0.55);
+      animation: app-pulse 2.2s ease-in-out infinite;
+    }
+    @keyframes app-pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.55; }
+    }
+    .app-status-text {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.60);
+    }
+    /* Section label within app */
+    .app-section-title {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    /* Readings 2×2 grid */
+    .app-readings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .app-reading {
+      background: rgba(255,255,255,0.022);
+      padding: 12px 14px;
+    }
+    .app-reading-label {
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.26);
+      margin-bottom: 4px;
+    }
+    .app-reading-value {
+      font-family: var(--mono);
+      font-size: 19px;
+      font-weight: 500;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .app-reading-unit {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: rgba(255,255,255,0.32);
+      margin-left: 2px;
+    }
+    /* App timestamp */
+    .app-timestamp {
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 0.10em;
+      color: rgba(255,255,255,0.18);
+      text-align: center;
+      margin-top: auto;
+      padding-top: 10px;
+    }
+    /* Performance metric rows */
+    .app-perf-rows {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .app-perf-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.045);
+    }
+    .app-perf-row:last-child { border-bottom: none; }
+    .app-perf-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.40);
+    }
+    .app-perf-value {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--white);
+    }
+    .app-perf-blue { color: rgba(15,98,254,0.88); }
+    /* Activity log entries */
+    .app-log-entries {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .app-log-entry {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .app-log-entry:last-child { border-bottom: none; }
+    .app-log-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.20);
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+    .app-log-dot.ok { background: #4ade80; }
+    .app-log-text {
+      font-family: var(--mono);
+      font-size: 9px;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.52);
+      flex: 1;
+    }
+    .app-log-time {
+      font-family: var(--mono);
+      font-size: 8px;
+      color: rgba(255,255,255,0.20);
+      flex-shrink: 0;
+    }
+    /* All-clear strip */
+    .app-clear {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      background: rgba(74,222,128,0.05);
+      border: 1px solid rgba(74,222,128,0.13);
+      border-radius: 6px;
+      margin-top: auto;
+    }
+    .app-clear-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4ade80;
+      flex-shrink: 0;
+    }
+    .app-clear-text {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.50);
+    }
+    /* State indicator dots — bottom of phone screen */
+    .app-state-dots {
+      position: absolute;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 5;
+    }
+    .app-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.16);
+      transition: background 0.4s, transform 0.4s;
+    }
+    .app-dot.active {
+      background: rgba(255,255,255,0.65);
+      transform: scale(1.3);
+    }
+
+    /* ─────────────────────────────────────────────────────
        RESPONSIVE — TABLET (≤ 900px)
     ─────────────────────────────────────────────────────── */
     @media (max-width: 900px) {
@@ -1714,6 +2054,9 @@
       .distrib-partner { grid-template-columns: 1fr; gap: 28px; padding: 32px 36px; }
       .cta-triple { padding: 80px var(--pad); }
       .cta-panels { grid-template-columns: 1fr; }
+      /* App Visibility — tablet */
+      .appvis-inner { grid-template-columns: 1fr; gap: 52px; }
+      .appvis-phone { width: 260px; height: 528px; }
     }
 
     /* ─────────────────────────────────────────────────────
@@ -1847,6 +2190,12 @@
       .cta-triple { padding: 60px 20px; }
       .cta-panels { grid-template-columns: 1fr; }
       .cta-panel { padding: 36px 24px; }
+      /* App Visibility — mobile */
+      .appvis { height: 300vh; }
+      .appvis-sticky { align-items: flex-start; padding-top: 40px; }
+      .appvis-inner { grid-template-columns: 1fr; gap: 40px; }
+      .appvis-phone { width: 240px; height: 488px; }
+      .appvis-phone-wrap { padding-bottom: 20px; }
     }
   </style>
 </head>
@@ -2219,6 +2568,167 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       APP VISIBILITY
+  ═══════════════════════════════════════════════ -->
+  <section class="appvis" id="app-visibility">
+    <canvas class="appvis-canvas" id="appvis-canvas"></canvas>
+    <div class="appvis-sticky">
+      <div class="appvis-inner">
+
+        <!-- ── Left: copy ── -->
+        <div class="appvis-copy sr">
+          <div class="appvis-label">Remote Visibility</div>
+          <h2 class="appvis-h2">Full visibility.<br />Without the work.</h2>
+          <div class="appvis-body">
+            <p>You don't need to manage your pool.</p>
+            <p>KontrolWater handles everything automatically.</p>
+            <p>But if you want to check status, review performance, or see alerts — it's all available in real time.</p>
+            <p>From anywhere.</p>
+          </div>
+          <a href="#contact" class="btn-primary">
+            Request a Demo
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- ── Right: phone mockup ── -->
+        <div class="appvis-phone-wrap sr sr-stagger" style="--stagger-delay:120ms">
+          <div class="appvis-phone">
+            <div class="appvis-pill"></div>
+            <div class="appvis-screen">
+
+              <!-- State 1: Status Overview -->
+              <div class="app-state active" data-state="0">
+                <div class="app-bar">
+                  <span class="app-bar-name">KW&thinsp;—&thinsp;1</span>
+                  <span class="app-bar-time">08:47</span>
+                </div>
+                <div class="app-status">
+                  <span class="app-status-dot"></span>
+                  <span class="app-status-text">Running Optimally</span>
+                </div>
+                <div class="app-section-title">Live Readings</div>
+                <div class="app-readings">
+                  <div class="app-reading">
+                    <div class="app-reading-label">pH</div>
+                    <div class="app-reading-value">7.42</div>
+                  </div>
+                  <div class="app-reading">
+                    <div class="app-reading-label">ORP</div>
+                    <div class="app-reading-value">742<span class="app-reading-unit">mV</span></div>
+                  </div>
+                  <div class="app-reading">
+                    <div class="app-reading-label">Temp</div>
+                    <div class="app-reading-value">28.4<span class="app-reading-unit">°C</span></div>
+                  </div>
+                  <div class="app-reading">
+                    <div class="app-reading-label">Flow</div>
+                    <div class="app-reading-value">18.2<span class="app-reading-unit">L/m</span></div>
+                  </div>
+                </div>
+                <div class="app-readings" style="margin-bottom:0">
+                  <div class="app-reading">
+                    <div class="app-reading-label">Pressure</div>
+                    <div class="app-reading-value">1.8<span class="app-reading-unit">bar</span></div>
+                  </div>
+                  <div class="app-reading">
+                    <div class="app-reading-label">TDS</div>
+                    <div class="app-reading-value">420<span class="app-reading-unit">ppm</span></div>
+                  </div>
+                </div>
+                <div class="app-timestamp">Updated 8 seconds ago</div>
+              </div>
+
+              <!-- State 2: Performance / Savings -->
+              <div class="app-state" data-state="1">
+                <div class="app-bar">
+                  <span class="app-bar-name">This Week</span>
+                  <span class="app-bar-time">↗</span>
+                </div>
+                <div class="app-section-title">Performance Summary</div>
+                <div class="app-perf-rows">
+                  <div class="app-perf-row">
+                    <span class="app-perf-label">Chemical savings</span>
+                    <span class="app-perf-value app-perf-blue">68%</span>
+                  </div>
+                  <div class="app-perf-row">
+                    <span class="app-perf-label">Energy saved</span>
+                    <span class="app-perf-value app-perf-blue">41%</span>
+                  </div>
+                  <div class="app-perf-row">
+                    <span class="app-perf-label">Dosing events</span>
+                    <span class="app-perf-value">847</span>
+                  </div>
+                  <div class="app-perf-row">
+                    <span class="app-perf-label">System uptime</span>
+                    <span class="app-perf-value">99.8%</span>
+                  </div>
+                  <div class="app-perf-row">
+                    <span class="app-perf-label">Manual interventions</span>
+                    <span class="app-perf-value">0</span>
+                  </div>
+                </div>
+                <div class="app-timestamp">7-day rolling average</div>
+              </div>
+
+              <!-- State 3: Activity Log -->
+              <div class="app-state" data-state="2">
+                <div class="app-bar">
+                  <span class="app-bar-name">Recent Activity</span>
+                  <span class="app-bar-time">08:47</span>
+                </div>
+                <div class="app-section-title">System Log</div>
+                <div class="app-log-entries">
+                  <div class="app-log-entry">
+                    <span class="app-log-dot ok"></span>
+                    <span class="app-log-text">pH correction applied</span>
+                    <span class="app-log-time">08:47</span>
+                  </div>
+                  <div class="app-log-entry">
+                    <span class="app-log-dot ok"></span>
+                    <span class="app-log-text">Flow rate nominal</span>
+                    <span class="app-log-time">08:41</span>
+                  </div>
+                  <div class="app-log-entry">
+                    <span class="app-log-dot ok"></span>
+                    <span class="app-log-text">Dosing cycle complete</span>
+                    <span class="app-log-time">08:36</span>
+                  </div>
+                  <div class="app-log-entry">
+                    <span class="app-log-dot ok"></span>
+                    <span class="app-log-text">Pressure stable — 1.8 bar</span>
+                    <span class="app-log-time">08:30</span>
+                  </div>
+                  <div class="app-log-entry">
+                    <span class="app-log-dot ok"></span>
+                    <span class="app-log-text">System check passed</span>
+                    <span class="app-log-time">08:00</span>
+                  </div>
+                </div>
+                <div class="app-clear">
+                  <span class="app-clear-dot"></span>
+                  <span class="app-clear-text">All systems clear</span>
+                </div>
+              </div>
+
+              <!-- State indicator dots -->
+              <div class="app-state-dots">
+                <span class="app-dot active" data-dot="0"></span>
+                <span class="app-dot" data-dot="1"></span>
+                <span class="app-dot" data-dot="2"></span>
+              </div>
+
+            </div><!-- .appvis-screen -->
+          </div><!-- .appvis-phone -->
+        </div><!-- .appvis-phone-wrap -->
+
+      </div><!-- .appvis-inner -->
+    </div><!-- .appvis-sticky -->
   </section>
 
   <!-- ═══════════════════════════════════════════
@@ -3084,6 +3594,107 @@
     }, { passive: true });
     updateBlueprint();
 
+
+    /* ══════════════════════════════════════════════════
+       APP VISIBILITY — background particles + scroll state
+       ──────────────────────────────────────────────────
+       Tuneable constants:
+         AV_CFG.COUNT       — particle pool size
+         AV_CFG.MIN_R/MAX_R — radius range (px)
+         AV_CFG.BASE_A      — peak particle opacity
+         AV_CFG.SPEED       — base upward drift speed
+         AV_CFG.T1 / T2    — scroll thresholds for state changes (0–1)
+    ══════════════════════════════════════════════════ */
+    (function () {
+      const AV_CFG = {
+        COUNT:  window.innerWidth < 640 ? 30 : 55,
+        MIN_R:  0.3,
+        MAX_R:  1.4,
+        BASE_A: 0.052, // very low — atmospheric only
+        SPEED:  0.00022,
+        T1:     0.35,  // progress threshold: state 1 → state 2
+        T2:     0.68,  // progress threshold: state 2 → state 3
+      };
+
+      // ── Background particles ──
+      const avCanvas = document.getElementById('appvis-canvas');
+      if (avCanvas) {
+        const ctx = avCanvas.getContext('2d');
+
+        function avResize() {
+          avCanvas.width  = avCanvas.offsetWidth;
+          avCanvas.height = avCanvas.offsetHeight;
+        }
+        avResize();
+        window.addEventListener('resize', avResize, { passive: true });
+
+        const avPts = Array.from({ length: AV_CFG.COUNT }, () => ({
+          x:    Math.random(),
+          y:    Math.random(),
+          vx:   (Math.random() - 0.5) * 0.00018,
+          vy:   -(AV_CFG.SPEED * (0.4 + Math.random() * 0.6)),
+          r:    AV_CFG.MIN_R + Math.random() * (AV_CFG.MAX_R - AV_CFG.MIN_R),
+          a:    (0.35 + Math.random() * 0.65) * AV_CFG.BASE_A,
+          blue: Math.random() < 0.18, // subtle blue-tinted subset
+        }));
+
+        let avActive = false;
+        const avSec = document.getElementById('app-visibility');
+        if (avSec) {
+          new IntersectionObserver(entries => {
+            avActive = entries[0].isIntersecting;
+          }, { threshold: 0 }).observe(avSec);
+        }
+
+        function avTick() {
+          requestAnimationFrame(avTick);
+          if (!avActive) return;
+          const W = avCanvas.width, H = avCanvas.height;
+          ctx.clearRect(0, 0, W, H);
+          avPts.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.y < -0.02) { p.y = 1.02; p.x = Math.random(); }
+            if (p.x < -0.02)   p.x = 1.02;
+            if (p.x >  1.02)   p.x = -0.02;
+            const fill = p.blue
+              ? `rgba(15,98,254,${(p.a * 0.55).toFixed(3)})`
+              : `rgba(255,255,255,${p.a.toFixed(3)})`;
+            ctx.fillStyle = fill;
+            ctx.beginPath();
+            ctx.arc(p.x * W, p.y * H, p.r, 0, Math.PI * 2);
+            ctx.fill();
+          });
+        }
+        avTick();
+      }
+
+      // ── Scroll-driven app state changes ──
+      const avSection = document.getElementById('app-visibility');
+      if (!avSection) return;
+
+      const appStates = avSection.querySelectorAll('.app-state');
+      const appDots   = avSection.querySelectorAll('.app-dot');
+
+      function setAppState(idx) {
+        appStates.forEach((s, i) => s.classList.toggle('active', i === idx));
+        appDots.forEach((d, i)   => d.classList.toggle('active', i === idx));
+      }
+      setAppState(0);
+
+      ScrollTrigger.create({
+        trigger: avSection,
+        start:   'top top',
+        end:     'bottom bottom',
+        onUpdate(self) {
+          const p = self.progress;
+          let idx = 0;
+          if      (p >= AV_CFG.T2) idx = 2;
+          else if (p >= AV_CFG.T1) idx = 1;
+          setAppState(idx);
+        }
+      });
+    })();
 
 
     /* ── Hamburger nav toggle (fade-in) ── */
