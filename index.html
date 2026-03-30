@@ -508,8 +508,8 @@
       height: calc(100vh - 64px);
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      padding: 80px var(--pad) 60px;
+      justify-content: flex-start;
+      padding: 180px var(--pad) 60px;
     }
     .setup-inner {
       max-width: var(--max);
@@ -1242,6 +1242,13 @@
       max-width: 22ch;
       margin-top: 16px;
     }
+    .audience-frame {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--gray-3);
+      letter-spacing: 0.02em;
+      margin-top: 20px;
+    }
     .audience-panels {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1957,46 +1964,47 @@
           id="audience-tw-heading"
           data-text="Different problems. One system to solve them."
           style="visibility:hidden"></h2>
+        <p class="audience-frame sr">Built for every role in the water management chain — owner, installer, or operator.</p>
       </div>
       <div class="audience-panels">
 
         <div class="audience-panel sr sr-stagger" style="--stagger-delay:0ms">
-          <div class="audience-tag">Pool Owners</div>
+          <div class="audience-tag">If you own a pool</div>
           <h3 class="audience-panel-h3">No more service calls.</h3>
-          <p class="audience-panel-body">KontrolWater monitors your pool around the clock and corrects chemistry automatically. Check status from your phone. Get an alert if anything drifts. Most owners haven't called a technician since install.</p>
+          <p class="audience-panel-body">KontrolWater installs and takes over. Chemistry is managed automatically, around the clock. Most owners have not called a technician since the day it was commissioned.</p>
           <ul class="audience-list">
-            <li><span class="aud-bullet"></span>No service visits required</li>
-            <li><span class="aud-bullet"></span>Real-time app monitoring</li>
-            <li><span class="aud-bullet"></span>Lower chemical and running costs</li>
-            <li><span class="aud-bullet"></span>Peace of mind when you're away</li>
+            <li><span class="aud-bullet"></span>Water is always correct — you never check it manually</li>
+            <li><span class="aud-bullet"></span>Alerts reach your phone before anything becomes a problem</li>
+            <li><span class="aud-bullet"></span>Chemical costs fall from month one</li>
+            <li><span class="aud-bullet"></span>Pool stays ready whether you're there or not</li>
           </ul>
-          <a href="#contact" class="audience-panel-cta">Book a demo →</a>
+          <a href="#contact" class="audience-panel-cta">See it on your pool →</a>
         </div>
 
         <div class="audience-panel sr sr-stagger" style="--stagger-delay:120ms">
-          <div class="audience-tag">Installers &amp; Trade</div>
+          <div class="audience-tag">If you install or maintain pools</div>
           <h3 class="audience-panel-h3">Install it. Walk away.</h3>
-          <p class="audience-panel-body">Retrofit any plant room in under 4 hours. No structural work. No specialist tools. Once commissioned, it runs itself — your clients stop calling and you get time back for the next job.</p>
+          <p class="audience-panel-body">Retrofits into any standard plant room in under 4 hours. No structural work, no specialist certification. Once commissioned, it runs without intervention — and so does your relationship with that client.</p>
           <ul class="audience-list">
-            <li><span class="aud-bullet"></span>Compatible with all standard configurations</li>
-            <li><span class="aud-bullet"></span>Under 4 hours typical install</li>
-            <li><span class="aud-bullet"></span>Fewer callbacks</li>
-            <li><span class="aud-bullet"></span>Remote diagnostics — no site visit needed</li>
+            <li><span class="aud-bullet"></span>Works with all standard pump and filter configurations</li>
+            <li><span class="aud-bullet"></span>Callbacks drop significantly after first install</li>
+            <li><span class="aud-bullet"></span>Diagnose issues remotely — no unnecessary site visits</li>
+            <li><span class="aud-bullet"></span>Proven by installers across 12+ countries</li>
           </ul>
-          <a href="#distributors" class="audience-panel-cta">Download technical pack →</a>
+          <a href="#distributors" class="audience-panel-cta">Get the technical pack →</a>
         </div>
 
         <div class="audience-panel sr sr-stagger" style="--stagger-delay:240ms">
-          <div class="audience-tag">Commercial &amp; Facilities</div>
+          <div class="audience-tag">If you manage commercial pools</div>
           <h3 class="audience-panel-h3">Compliance. Without the overhead.</h3>
-          <p class="audience-panel-body">Water quality is regulatory — not optional. KontrolWater keeps your pools within specification automatically and logs every reading for audit. Fewer staff hours, measurable chemical savings, no compliance gaps.</p>
+          <p class="audience-panel-body">Water quality is a regulatory requirement — not something to manage manually. KontrolWater keeps every pool within specification automatically and logs every reading, so audit preparation is already done.</p>
           <ul class="audience-list">
-            <li><span class="aud-bullet"></span>Continuous compliance monitoring</li>
-            <li><span class="aud-bullet"></span>Multi-site dashboard</li>
+            <li><span class="aud-bullet"></span>Compliance maintained continuously — no gaps, no surprises</li>
+            <li><span class="aud-bullet"></span>Every site visible from a single dashboard</li>
             <li><span class="aud-bullet"></span>Up to 70% reduction in chemical spend</li>
-            <li><span class="aud-bullet"></span>Full audit-ready data logs</li>
+            <li><span class="aud-bullet"></span>Full audit log — always ready for inspection</li>
           </ul>
-          <a href="#contact" class="audience-panel-cta">Request a commercial proposal →</a>
+          <a href="#contact" class="audience-panel-cta">Request a site proposal →</a>
         </div>
 
       </div>
