@@ -725,18 +725,55 @@
     .diff-table td.kw-val {
       color: var(--white);
       font-weight: 500;
+      background: rgba(15,98,254,0.04);
+      border-left:  1px solid rgba(15,98,254,0.09);
+      border-right: 1px solid rgba(15,98,254,0.09);
     }
+    /* KW column header highlight */
+    .kw-th {
+      background: rgba(15,98,254,0.04);
+      border-left:  1px solid rgba(15,98,254,0.09);
+      border-right: 1px solid rgba(15,98,254,0.09);
+      color: rgba(255,255,255,0.72) !important;
+    }
+    /* Base check circle */
     .check {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       width: 18px; height: 18px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.08);
-      line-height: 18px;
-      text-align: center;
+      background: rgba(255,255,255,0.06);
       font-size: 10px;
+      line-height: 1;
     }
-    .check.yes { background: var(--white); color: var(--black); }
-    .check.no  { background: rgba(255,255,255,0.04); color: var(--gray-3); }
+    /* KW column — blue fill, white tick, slight glow */
+    td.kw-val .check.yes {
+      width: 20px; height: 20px;
+      background: var(--blue);
+      color: var(--white);
+      box-shadow: 0 0 8px rgba(15,98,254,0.35);
+      font-size: 11px;
+    }
+    /* Competitor ticks — dimmed, clearly subordinate to KW */
+    .check.yes {
+      background: rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.55);
+    }
+    /* No / unavailable */
+    .check.no {
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.18);
+    }
+    /* Partial / limited — mid-grey, between no and yes */
+    .check.partial {
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.38);
+      font-size: 9px;
+      width: 52px;
+      border-radius: 3px;
+      letter-spacing: 0.04em;
+    }
 
     /* ─────────────────────────────────────────────────────
        HOW IT WORKS — scroll-driven reveal + SVG diagram
@@ -2777,7 +2814,7 @@
           <thead>
             <tr>
               <th style="width: 45%;">Capability</th>
-              <th>KontrolWater</th>
+              <th class="kw-th">KontrolWater</th>
               <th>Traditional System</th>
               <th>Manual Management</th>
             </tr>
@@ -2792,7 +2829,7 @@
             <tr class="diff-row-sr">
               <td>Automatic chemical dosing</td>
               <td class="kw-val"><span class="check yes">✓</span></td>
-              <td>Partial</td>
+              <td><span class="check partial">Partial</span></td>
               <td><span class="check no">—</span></td>
             </tr>
             <tr class="diff-row-sr">
@@ -2804,14 +2841,14 @@
             <tr class="diff-row-sr">
               <td>Remote monitoring via app</td>
               <td class="kw-val"><span class="check yes">✓</span></td>
-              <td>Limited</td>
+              <td><span class="check partial">Limited</span></td>
               <td><span class="check no">—</span></td>
             </tr>
             <tr class="diff-row-sr">
               <td>Retrofits existing plumbing</td>
               <td class="kw-val"><span class="check yes">✓</span></td>
               <td><span class="check yes">✓</span></td>
-              <td>N/A</td>
+              <td><span class="check no">N/A</span></td>
             </tr>
             <tr class="diff-row-sr">
               <td>No ongoing service visits required</td>
@@ -2822,8 +2859,8 @@
             <tr class="diff-row-sr">
               <td>Chemical consumption reduction</td>
               <td class="kw-val">Up to 40%</td>
-              <td>—</td>
-              <td>—</td>
+              <td><span class="check no">—</span></td>
+              <td><span class="check no">—</span></td>
             </tr>
           </tbody>
         </table>
