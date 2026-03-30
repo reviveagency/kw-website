@@ -722,16 +722,10 @@
     .diff-table td.kw-val {
       color: var(--white);
       font-weight: 500;
-      background: rgba(15,98,254,0.04);
-      border-left:  1px solid rgba(15,98,254,0.09);
-      border-right: 1px solid rgba(15,98,254,0.09);
     }
-    /* KW column header highlight */
+    /* KW column header — full white, stands out from dimmed siblings */
     .kw-th {
-      background: rgba(15,98,254,0.04);
-      border-left:  1px solid rgba(15,98,254,0.09);
-      border-right: 1px solid rgba(15,98,254,0.09);
-      color: rgba(255,255,255,0.72) !important;
+      color: var(--white) !important;
     }
     /* Base check circle */
     .check {
@@ -778,7 +772,7 @@
     .how {
       height: 420vh; /* extended — card 3 needs reading time */
       position: relative;
-      background: #070a0f;
+      background: linear-gradient(to bottom, #020509 0px, #070a0f 120px, #070a0f calc(100% - 120px), #03050a 100%);
     }
     .how-sticky {
       position: sticky;
@@ -1317,7 +1311,7 @@
     ─────────────────────────────────────────────────────── */
     .audience {
       padding: 120px var(--pad);
-      background: #020509;
+      background: linear-gradient(to bottom, #000000 0px, #020509 110px, #020509 100%);
     }
     .audience-inner { max-width: var(--max); margin: 0 auto; }
     .audience-header { margin-bottom: 64px; }
@@ -1547,7 +1541,7 @@
     ─────────────────────────────────────────────────────── */
     .distrib {
       padding: 120px var(--pad);
-      background: #040810;
+      background: linear-gradient(to bottom, #03050a 0px, #040810 110px, #040810 100%);
     }
     .distrib-inner { max-width: var(--max); margin: 0 auto; }
     .distrib-header {
@@ -1753,7 +1747,7 @@
     .appvis {
       position: relative;
       height: 250vh;
-      background: #03050a;
+      background: linear-gradient(to bottom, #070a0f 0px, #03050a 120px, #03050a calc(100% - 100px), #040810 100%);
     }
     .appvis-sticky {
       position: sticky;
