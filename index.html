@@ -1445,7 +1445,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 80px;
       align-items: end;
-      margin-bottom: 60px;
+      margin-bottom: 16px;
     }
     .distrib-h2 {
       font-size: clamp(32px, 3.5vw, 52px);
@@ -1460,6 +1460,18 @@
       line-height: 1.85;
       color: var(--gray-2);
     }
+    /* Framing line — sets commercial intent before the grid */
+    .distrib-frame {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.75;
+      color: var(--gray-3);
+      border-top: 1px solid var(--border-faint);
+      padding-top: 20px;
+      margin-bottom: 48px;
+      max-width: 72ch;
+    }
+    /* Grid uses gap-as-divider pattern */
     .distrib-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -1469,13 +1481,32 @@
     }
     .distrib-card {
       background: var(--black);
-      padding: 36px 32px;
+      padding: 40px 34px 36px;
       display: flex;
       flex-direction: column;
       gap: 14px;
-      transition: background 0.2s;
+      position: relative;
+      border: 1px solid transparent; /* reserves space — avoids layout shift on hover */
+      margin: -1px; /* overlap with grid gap lines */
+      transition: background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+      cursor: default;
     }
-    .distrib-card:hover { background: rgba(255,255,255,0.025); }
+    .distrib-card:hover {
+      background: rgba(255,255,255,0.028);
+      border-color: rgba(255,255,255,0.11);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+      z-index: 1;
+    }
+    /* Step counter — top-right, very restrained */
+    .distrib-step {
+      position: absolute;
+      top: 28px;
+      right: 28px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.10);
+    }
     .distrib-type {
       font-family: var(--mono);
       font-size: 9px;
@@ -1484,13 +1515,20 @@
       color: var(--blue);
     }
     .distrib-title {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 500;
-      line-height: 1.3;
+      line-height: 1.25;
       color: var(--white);
+      letter-spacing: -0.01em;
+    }
+    .distrib-outcome {
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.75);
     }
     .distrib-desc {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 300;
       line-height: 1.75;
       color: var(--gray-2);
@@ -1500,34 +1538,43 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 400;
       font-family: var(--mono);
-      letter-spacing: 0.06em;
+      letter-spacing: 0.10em;
       text-transform: uppercase;
       color: var(--gray-3);
-      transition: color 0.2s;
-      margin-top: 4px;
+      transition: color 0.18s;
+      margin-top: 6px;
+      text-decoration: none;
     }
     .distrib-link:hover { color: var(--white); }
+    /* Partner block — elevated, left-accented, not an afterthought */
     .distrib-partner {
-      background: var(--black);
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr auto;
       align-items: center;
-      justify-content: space-between;
-      gap: 40px;
-      padding: 32px 40px;
+      gap: 48px;
+      padding: 40px 48px;
+      background: var(--black);
       border: 1px solid var(--border-faint);
-      flex-wrap: wrap;
+      border-left: 3px solid var(--blue);
+      margin-top: 48px;
+    }
+    .distrib-partner-h3 {
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: -0.015em;
+      color: var(--white);
+      margin-bottom: 10px;
     }
     .distrib-partner-text {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 300;
       line-height: 1.7;
       color: var(--gray-2);
-      max-width: 54ch;
+      max-width: 52ch;
     }
-    .distrib-partner-text strong { color: var(--white); font-weight: 500; }
 
     /* ─────────────────────────────────────────────────────
        CTA — THREE AUDIENCE COLUMNS
@@ -1630,7 +1677,7 @@
       .distrib { padding: 80px var(--pad); }
       .distrib-header { grid-template-columns: 1fr; gap: 32px; }
       .distrib-grid { grid-template-columns: repeat(2, 1fr); }
-      .distrib-partner { padding: 28px 32px; }
+      .distrib-partner { grid-template-columns: 1fr; gap: 28px; padding: 32px 36px; }
       .cta-triple { padding: 80px var(--pad); }
       .cta-panels { grid-template-columns: 1fr; }
     }
@@ -1760,7 +1807,7 @@
       .distrib { padding: 60px 20px; }
       .distrib-header { grid-template-columns: 1fr; gap: 24px; }
       .distrib-grid { grid-template-columns: 1fr; }
-      .distrib-partner { flex-direction: column; align-items: flex-start; padding: 24px; gap: 24px; }
+      .distrib-partner { grid-template-columns: 1fr; gap: 24px; padding: 28px 24px; }
       .cta-triple { padding: 60px 20px; }
       .cta-panels { grid-template-columns: 1fr; }
       .cta-panel { padding: 36px 24px; }
@@ -2413,36 +2460,53 @@
           <span class="label">Distributor Toolkit</span>
           <h2 class="distrib-h2">Close faster.<br />Everything's ready.</h2>
         </div>
-        <p class="distrib-sub sr">KontrolWater is sold exclusively through certified partners. These materials are built for your sales process — send them to clients, use them in proposals, share them with decision-makers.</p>
+        <p class="distrib-sub sr">KontrolWater sells exclusively through certified partners. These materials remove the work from your sales process — so every conversation is prepared before it starts.</p>
       </div>
+      <p class="distrib-frame sr">Everything you need to explain, justify, and close — already prepared.</p>
       <div class="distrib-grid">
+
         <div class="distrib-card sr sr-stagger" style="--stagger-delay:0ms">
+          <span class="distrib-step">01</span>
           <div class="distrib-type">Send to client</div>
           <div class="distrib-title">Product Overview</div>
-          <p class="distrib-desc">One page. Covers what it is, what it does, and what it costs relative to a service contract. Forward it before the first call.</p>
+          <p class="distrib-outcome">Explains the system in one page — before the first call.</p>
+          <p class="distrib-desc">Covers what KontrolWater does, how it compares to a service contract, and why it pays for itself. Send it the day before any meeting.</p>
           <a href="#" class="distrib-link">Download ↗</a>
         </div>
+
         <div class="distrib-card sr sr-stagger" style="--stagger-delay:80ms">
+          <span class="distrib-step">02</span>
           <div class="distrib-type">Use in proposal</div>
           <div class="distrib-title">ROI Calculator</div>
-          <p class="distrib-desc">Input their pool count and current spend. Output: payback period and 3-year savings. Works for residential, commercial, and multi-site.</p>
+          <p class="distrib-outcome">Removes the pricing objection before it's raised.</p>
+          <p class="distrib-desc">Enter pool count and current maintenance spend. Output: payback period and 3-year savings figure. Works for residential, commercial, and multi-site.</p>
           <a href="#" class="distrib-link">Download ↗</a>
         </div>
+
         <div class="distrib-card sr sr-stagger" style="--stagger-delay:160ms">
+          <span class="distrib-step">03</span>
           <div class="distrib-type">Share with stakeholders</div>
           <div class="distrib-title">Technical Spec Sheet</div>
-          <p class="distrib-desc">Full installation requirements, compatibility table, and dimensions for facilities managers and building management teams.</p>
+          <p class="distrib-outcome">Answers the technical questions before procurement asks them.</p>
+          <p class="distrib-desc">Installation requirements, compatibility table, dimensions, and electrical specs — in the format facilities managers and procurement teams expect.</p>
           <a href="#" class="distrib-link">Download ↗</a>
         </div>
+
         <div class="distrib-card sr sr-stagger" style="--stagger-delay:240ms">
+          <span class="distrib-step">04</span>
           <div class="distrib-type">Use on site</div>
           <div class="distrib-title">Installer Guide</div>
-          <p class="distrib-desc">Step-by-step commissioning for standard plant room setups. Covers all major pump and filter configurations. Read before the first visit.</p>
+          <p class="distrib-outcome">Standard installation. Fewer surprises on site.</p>
+          <p class="distrib-desc">Step-by-step commissioning for all standard plant room configurations. Read it once before the visit — most installations complete in under 4 hours.</p>
           <a href="#" class="distrib-link">Download ↗</a>
         </div>
+
       </div>
       <div class="distrib-partner sr">
-        <p class="distrib-partner-text"><strong>Not yet a certified partner?</strong> We're expanding our distributor network. If you're an installer or trade supplier looking to add a premium, low-maintenance product that sells itself on results — we'd like to hear from you.</p>
+        <div class="distrib-partner-copy">
+          <h3 class="distrib-partner-h3">Become a certified partner.</h3>
+          <p class="distrib-partner-text">KontrolWater sells through a limited network of certified partners. If you install or supply pool systems and want access to this toolkit — and the margin that comes with it — apply below.</p>
+        </div>
         <a href="#contact" class="btn-ghost">Apply for Partnership →</a>
       </div>
     </div>
