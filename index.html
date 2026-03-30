@@ -1448,13 +1448,31 @@
       margin-top: 12px;
       margin-bottom: 32px;
     }
-    .about-body {
-      font-size: 15px;
-      font-weight: 300;
-      line-height: 1.9;
-      color: var(--gray-2);
+    .about-proof {
+      list-style: none;
+      margin-top: 36px;
     }
-    .about-body p + p { margin-top: 20px; }
+    .about-proof-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border-faint);
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.68);
+    }
+    .about-proof-item:first-child { border-top: 1px solid var(--border-faint); }
+    .about-proof-mark {
+      width: 4px;
+      height: 4px;
+      border-radius: 1px;
+      background: var(--blue);
+      opacity: 0.65;
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
     .about-creds {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -2879,13 +2897,15 @@
           <div class="sr">
             <span class="label">Engineered in Europe</span>
             <h2 class="about-h2">Engineered in Europe. Built for precision.</h2>
-            <p class="about-origin sr">Designed and manufactured in Portugal.</p>
+            <p class="about-origin sr">Designed and manufactured in Portugal. Built to industrial standards.</p>
           </div>
-          <div class="about-body sr">
-            <p>Timer-based dosing systems don't know what's in the water. They add chemicals on a schedule — regardless of actual conditions. The result: over-dosing, under-dosing, and dependence on service visits to catch the difference. That's not pool management. It's reactive maintenance dressed up as a system.</p>
-            <p>KontrolWater was built to replace it. Our engineers come from industrial water treatment, sensor hardware, and building management systems. Every unit is manufactured and tested at our European facility. Every installation is backed by a 5-year warranty and the same technical team that built the system.</p>
-            <p>We operate in 12+ countries. We have not had a single fleet-wide failure. That's not a claim — it's a record.</p>
-          </div>
+          <ul class="about-proof sr">
+            <li class="about-proof-item"><span class="about-proof-mark"></span>Built by engineers from industrial water treatment and control systems</li>
+            <li class="about-proof-item"><span class="about-proof-mark"></span>Tested and calibrated at our European facility</li>
+            <li class="about-proof-item"><span class="about-proof-mark"></span>Installed in 12+ countries</li>
+            <li class="about-proof-item"><span class="about-proof-mark"></span>99%+ system uptime</li>
+            <li class="about-proof-item"><span class="about-proof-mark"></span>Zero fleet-wide failures to date</li>
+          </ul>
           <div class="about-creds sr">
             <div class="about-cred">
               <div class="about-cred-value">12+</div>
