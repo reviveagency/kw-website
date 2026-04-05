@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Revive — Websites that convert.</title>
+  <meta name="description" content="We redesign websites to turn traffic into revenue. Book a demo." />
+  <link rel="icon" type="image/png" href="Media/Phoenix_PNG.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ═══════════════════════════════════════════════
+       RESET & TOKENS
+    ═══════════════════════════════════════════════ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg:       #111111;
+      --bg-card:  #181818;
+      --white:    #ffffff;
+      --gray-1:   rgba(255,255,255,0.85);
+      --gray-2:   rgba(255,255,255,0.50);
+      --gray-3:   rgba(255,255,255,0.25);
+      --gray-4:   rgba(255,255,255,0.08);
+      --orange:   #F26522;
+      --gradient: linear-gradient(135deg, #E8461C 0%, #F26522 40%, #F7941D 100%);
+      --font:     'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --max:      1240px;
+      --pad:      clamp(20px, 5vw, 80px);
+      --ease:     cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+    body { background: var(--bg); overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ═══════════════════════════════════════════════
+       SCROLL REVEAL
+    ═══════════════════════════════════════════════ */
+    .sr {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+    }
+    .sr.visible { opacity: 1; transform: none; }
+    .sr-d1 { transition-delay: 80ms; }
+    .sr-d2 { transition-delay: 160ms; }
+    .sr-d3 { transition-delay: 240ms; }
+
+    /* ═══════════════════════════════════════════════
+       BUTTON
+    ═══════════════════════════════════════════════ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 17px 40px;
+      border-radius: 60px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      border: none;
+      cursor: pointer;
+      background: var(--gradient);
+      color: var(--white);
+      box-shadow: 0 4px 24px rgba(242,101,34,0.25);
+      transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+      white-space: nowrap;
+    }
+    .btn:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 0 48px rgba(242,101,34,0.20), 0 12px 40px rgba(242,101,34,0.30);
+    }
+    .btn:active { transform: translateY(0) scale(0.98); }
+    .btn svg { flex-shrink: 0; }
+
+    /* ═══════════════════════════════════════════════
+       NAV
+    ═══════════════════════════════════════════════ */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 var(--pad);
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(17,17,17,0.75);
+      backdrop-filter: blur(24px) saturate(1.5);
+      -webkit-backdrop-filter: blur(24px) saturate(1.5);
+      border-bottom: 1px solid var(--gray-4);
+    }
+    .nav-logo img { height: 22px; width: auto; }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .nav-link {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--gray-2);
+      transition: color 0.25s;
+    }
+    .nav-link:hover { color: var(--white); }
+    .nav-btn {
+      padding: 10px 26px !important;
+      font-size: 13px !important;
+      box-shadow: none !important;
+    }
+    .nav-btn:hover { box-shadow: 0 4px 20px rgba(242,101,34,0.25) !important; }
+
+    /* ═══════════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════════ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 140px var(--pad) 120px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero-inner { max-width: 860px; position: relative; z-index: 1; }
+    .hero h1 {
+      font-size: clamp(40px, 7vw, 80px);
+      font-weight: 800;
+      letter-spacing: -0.045em;
+      line-height: 1.05;
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: h-up 0.7s 0.15s var(--ease) forwards;
+    }
+    .hero-sub {
+      font-size: clamp(16px, 1.6vw, 19px);
+      font-weight: 300;
+      color: var(--gray-2);
+      margin-bottom: 52px;
+      opacity: 0;
+      animation: h-up 0.65s 0.3s var(--ease) forwards;
+    }
+    .hero-cta {
+      opacity: 0;
+      animation: h-up 0.6s 0.45s var(--ease) forwards;
+    }
+    @keyframes h-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero h1, .hero-sub, .hero-cta { animation: none; opacity: 1; transform: none; }
+      .hero::before { animation: none; }
+      .sr { opacity: 1; transform: none; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       TRANSITION STATEMENT
+    ═══════════════════════════════════════════════ */
+    .transition {
+      padding: 100px var(--pad) 80px;
+      text-align: center;
+    }
+    .transition p {
+      font-size: clamp(22px, 3vw, 38px);
+      font-weight: 500;
+      letter-spacing: -0.03em;
+      line-height: 1.35;
+      color: var(--gray-2);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .transition em {
+      font-style: normal;
+      color: var(--white);
+    }
+
+    /* ═══════════════════════════════════════════════
+       PORTFOLIO
+    ═══════════════════════════════════════════════ */
+    .portfolio {
+      padding: 40px var(--pad) 160px;
+    }
+    .portfolio-inner { max-width: var(--max); margin: 0 auto; }
+
+    /* ── Stacked cards ── */
+    .portfolio-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .p-card {
+      display: block;
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--bg-card);
+      border: 1px solid var(--gray-4);
+      transition: transform 0.55s var(--ease), box-shadow 0.55s var(--ease), border-color 0.4s;
+    }
+    .p-card:hover {
+      transform: translateY(-6px) scale(1.005);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.55);
+      border-color: rgba(255,255,255,0.10);
+    }
+
+    /* Browser chrome bar */
+    .p-chrome {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 14px 20px;
+      background: rgba(255,255,255,0.025);
+      border-bottom: 1px solid var(--gray-4);
+    }
+    .p-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+    .p-url {
+      margin-left: 12px;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--gray-3);
+      letter-spacing: 0.01em;
+    }
+
+    /* Preview area */
+    .p-preview {
+      position: relative;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+    }
+    /* Screenshot preview */
+    .p-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      transition: transform 0.7s var(--ease), filter 0.5s;
+    }
+    .p-card:hover .p-preview img {
+      transform: scale(1.04);
+      filter: brightness(0.7);
+    }
+
+    /* Hover overlay with CTA */
+    .p-hover {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.15);
+      opacity: 0;
+      transition: opacity 0.4s var(--ease);
+      z-index: 2;
+    }
+    .p-card:hover .p-hover { opacity: 1; }
+    .p-hover-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 30px;
+      border-radius: 60px;
+      background: var(--gradient);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 600;
+      transform: translateY(10px);
+      transition: transform 0.45s var(--ease);
+    }
+    .p-card:hover .p-hover-btn { transform: none; }
+
+    /* Bottom info bar */
+    .p-info {
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .p-info-name {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+    }
+    .p-info-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--gray-2);
+      margin-top: 3px;
+    }
+    .p-info-tag {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--orange);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    /* ═══════════════════════════════════════════════
+       PROCESS
+    ═══════════════════════════════════════════════ */
+    .process {
+      padding: 120px var(--pad);
+      border-top: 1px solid var(--gray-4);
+    }
+    .process-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+    .process-h2 {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.035em;
+      line-height: 1.1;
+      margin-bottom: 72px;
+    }
+    .process-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+    .process-item {
+      padding: 0 36px 0 0;
+    }
+    .process-item + .process-item {
+      border-left: 1px solid var(--gray-4);
+      padding-left: 36px;
+    }
+    .process-num {
+      font-size: 56px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0.18;
+      margin-bottom: 20px;
+    }
+    .process-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .process-desc {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--gray-2);
+      line-height: 1.5;
+    }
+
+    /* ═══════════════════════════════════════════════
+       OUTCOMES (SERVICES)
+    ═══════════════════════════════════════════════ */
+    .outcomes {
+      padding: 140px var(--pad);
+      text-align: center;
+    }
+    .outcomes-inner { max-width: var(--max); margin: 0 auto; }
+    .outcomes-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 48px;
+    }
+    .outcomes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+    .outcomes-list span {
+      font-size: clamp(36px, 5vw, 68px);
+      font-weight: 800;
+      letter-spacing: -0.045em;
+      line-height: 1.1;
+      color: var(--gray-3);
+      transition: color 0.4s;
+    }
+    .outcomes-list span:hover { color: var(--white); }
+
+    /* ═══════════════════════════════════════════════
+       FINAL CTA
+    ═══════════════════════════════════════════════ */
+    .cta {
+      padding: 160px var(--pad);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta::before {
+      content: '';
+      position: absolute;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(242,101,34,0.045) 0%, transparent 60%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .cta-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .cta h2 {
+      font-size: clamp(34px, 4.8vw, 60px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 16px;
+    }
+    .cta h2 em {
+      font-style: normal;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .cta-sub {
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--gray-2);
+      margin-bottom: 52px;
+    }
+
+    /* ═══════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════ */
+    .footer {
+      padding: 36px var(--pad);
+      border-top: 1px solid var(--gray-4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-copy {
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--gray-3);
+    }
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+    .footer-links a {
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--gray-3);
+      transition: color 0.25s;
+    }
+    .footer-links a:hover { color: var(--gray-1); }
+
+    /* ═══════════════════════════════════════════════
+       RESPONSIVE — TABLET
+    ═══════════════════════════════════════════════ */
+    @media (max-width: 900px) {
+      .process-row { grid-template-columns: 1fr; gap: 0; }
+      .process-item { padding: 32px 0; }
+      .process-item + .process-item {
+        border-left: none;
+        border-top: 1px solid var(--gray-4);
+        padding-left: 0;
+      }
+      .p-preview { aspect-ratio: 16/10; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       RESPONSIVE — MOBILE
+    ═══════════════════════════════════════════════ */
+    @media (max-width: 640px) {
+      .hero { min-height: 92vh; padding: 120px 24px 80px; }
+      .hero h1 { font-size: clamp(32px, 10vw, 48px); }
+      .btn { width: 100%; justify-content: center; padding: 17px 28px; }
+      .portfolio { padding: 40px 16px 100px; }
+      .portfolio-stack { gap: 16px; }
+      .p-card { border-radius: 14px; }
+      .p-chrome { padding: 10px 16px; }
+      .p-info { padding: 16px 18px; flex-direction: column; align-items: flex-start; gap: 6px; }
+      .p-preview-name { font-size: clamp(22px, 7vw, 32px); }
+      .process { padding: 80px 24px; }
+      .outcomes { padding: 100px 24px; }
+      .cta { padding: 100px 24px; }
+      .footer { padding: 28px 24px; flex-direction: column; align-items: flex-start; }
+
+      /* Mobile nav */
+      .nav-right { gap: 16px; }
+      .nav-link { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       NAV
+  ═══════════════════════════════════════════════ -->
+  <nav class="nav">
+    <a href="#" class="nav-logo">
+      <img src="Media/ReviveLogo (White).png" alt="Revive" />
+    </a>
+    <div class="nav-right">
+      <a href="#work" class="nav-link">Work</a>
+      <a href="#contact" class="btn nav-btn">Book a Demo</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════
+       HERO
+  ═══════════════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <canvas class="hero-canvas" id="emberCanvas"></canvas>
+    <div class="hero-inner">
+      <h1>If your website isn't converting,<br />it's costing you money.</h1>
+      <p class="hero-sub">We redesign websites to turn traffic into revenue.</p>
+      <div class="hero-cta">
+        <a href="#contact" class="btn">
+          Book a Demo
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       TRANSITION
+  ═══════════════════════════════════════════════ -->
+  <div class="transition sr">
+    <p>Most websites <em>leak money.</em><br />Here's what happens when they don't.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       PORTFOLIO
+  ═══════════════════════════════════════════════ -->
+  <section class="portfolio" id="work">
+    <div class="portfolio-inner">
+      <div class="portfolio-stack">
+
+        <!-- 1. BTW Creative -->
+        <a href="https://btwcreative.co.uk" target="_blank" rel="noopener" class="p-card sr">
+          <div class="p-chrome">
+            <span class="p-dot"></span><span class="p-dot"></span><span class="p-dot"></span>
+            <span class="p-url">btwcreative.co.uk</span>
+          </div>
+          <div class="p-preview">
+            <img src="Media/BTWCreative.png" alt="BTW Creative website" loading="lazy" />
+            <div class="p-hover">
+              <span class="p-hover-btn">View Live Site
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 11L11 1M11 1H4M11 1v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+          </div>
+          <div class="p-info">
+            <div>
+              <div class="p-info-name">BTW Creative</div>
+              <div class="p-info-desc">Creative agency. Bold visual identity built for impact and recall.</div>
+            </div>
+            <span class="p-info-tag">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 9l3-3 2 2 4-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Brand + web
+            </span>
+          </div>
+        </a>
+
+        <!-- 2. KontrolWater -->
+        <a href="https://kw-website-eta.vercel.app/" target="_blank" rel="noopener" class="p-card sr sr-d1">
+          <div class="p-chrome">
+            <span class="p-dot"></span><span class="p-dot"></span><span class="p-dot"></span>
+            <span class="p-url">kw-website-eta.vercel.app</span>
+          </div>
+          <div class="p-preview">
+            <img src="Media/KontrolWater.png" alt="KontrolWater website" loading="lazy" />
+            <div class="p-hover">
+              <span class="p-hover-btn">View Live Site
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 11L11 1M11 1H4M11 1v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+          </div>
+          <div class="p-info">
+            <div>
+              <div class="p-info-name">KontrolWater</div>
+              <div class="p-info-desc">Premium pool automation. Cinematic product storytelling built to convert.</div>
+            </div>
+            <span class="p-info-tag">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 9l3-3 2 2 4-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Full redesign
+            </span>
+          </div>
+        </a>
+
+        <!-- 3. Break the Wire -->
+        <a href="https://breakthewire.co.uk" target="_blank" rel="noopener" class="p-card sr sr-d2">
+          <div class="p-chrome">
+            <span class="p-dot"></span><span class="p-dot"></span><span class="p-dot"></span>
+            <span class="p-url">breakthewire.co.uk</span>
+          </div>
+          <div class="p-preview">
+            <img src="Media/BreakTheWire.png" alt="Break the Wire website" loading="lazy" />
+            <div class="p-hover">
+              <span class="p-hover-btn">View Live Site
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 11L11 1M11 1H4M11 1v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+          </div>
+          <div class="p-info">
+            <div>
+              <div class="p-info-name">Break the Wire</div>
+              <div class="p-info-desc">Streetwear e-commerce built for speed, clarity, and scale.</div>
+            </div>
+            <span class="p-info-tag">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 9l3-3 2 2 4-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Full build
+            </span>
+          </div>
+        </a>
+
+        <!-- 4. Touro e Fogo -->
+        <a href="https://touroefogo.com" target="_blank" rel="noopener" class="p-card sr sr-d3">
+          <div class="p-chrome">
+            <span class="p-dot"></span><span class="p-dot"></span><span class="p-dot"></span>
+            <span class="p-url">touroefogo.com</span>
+          </div>
+          <div class="p-preview">
+            <img src="Media/TouroEfogo.png" alt="Touro e Fogo website" loading="lazy" />
+            <div class="p-hover">
+              <span class="p-hover-btn">View Live Site
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 11L11 1M11 1H4M11 1v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+          </div>
+          <div class="p-info">
+            <div>
+              <div class="p-info-name">Touro e Fogo</div>
+              <div class="p-info-desc">Bold food brand. High-energy visuals driving engagement and orders.</div>
+            </div>
+            <span class="p-info-tag">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 9l3-3 2 2 4-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              +40% engagement
+            </span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       PROCESS
+  ═══════════════════════════════════════════════ -->
+  <section class="process">
+    <div class="process-inner">
+      <h2 class="process-h2 sr">How it works.</h2>
+      <div class="process-row">
+        <div class="process-item sr">
+          <div class="process-num">01</div>
+          <div class="process-title">Audit</div>
+          <p class="process-desc">Find what's leaking.</p>
+        </div>
+        <div class="process-item sr sr-d1">
+          <div class="process-num">02</div>
+          <div class="process-title">Redesign</div>
+          <p class="process-desc">Fix what matters.</p>
+        </div>
+        <div class="process-item sr sr-d2">
+          <div class="process-num">03</div>
+          <div class="process-title">Launch</div>
+          <p class="process-desc">Improve continuously.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       OUTCOMES
+  ═══════════════════════════════════════════════ -->
+  <section class="outcomes">
+    <div class="outcomes-inner">
+      <div class="outcomes-label sr">What you get</div>
+      <div class="outcomes-list sr">
+        <span>Better UX.</span>
+        <span>Higher conversion.</span>
+        <span>Smarter optimisation.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FINAL CTA
+  ═══════════════════════════════════════════════ -->
+  <section class="cta" id="contact">
+    <div class="cta-inner sr">
+      <h2>Your website is either converting — or <em>leaking money.</em></h2>
+      <p class="cta-sub">Let's fix it.</p>
+      <a href="#" class="btn">
+        Book a Demo
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════════ -->
+  <footer class="footer">
+    <span class="footer-copy">&copy; 2026 Revive. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="#">Instagram</a>
+      <a href="#">LinkedIn</a>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════
+       SCRIPT
+  ═══════════════════════════════════════════════ -->
+  <script>
+    /* ── Scroll reveal ── */
+    (function () {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -32px 0px' });
+      document.querySelectorAll('.sr').forEach(el => io.observe(el));
+    })();
+
+    /* ══════════════════════════════════════════════════
+       EMBER PARTICLE SYSTEM — Phoenix Rebirth
+
+       Tweak constants below to adjust intensity:
+       - PARTICLE_COUNT: more = denser (80–150 sweet spot)
+       - BASE_OPACITY: max resting opacity per particle
+       - GLOW_INTENSITY: strength of the orange bloom
+       - RISE_SPEED: how fast particles ascend
+       - PHASE_DURATION: seconds per lifecycle phase
+    ══════════════════════════════════════════════════ */
+    (function () {
+      const canvas = document.getElementById('emberCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const hero = document.getElementById('hero');
+
+      /* ── Tunables ── */
+      const PARTICLE_COUNT = 100;
+      const BASE_OPACITY   = 0.35;
+      const GLOW_INTENSITY = 0.12;
+      const RISE_SPEED     = 0.15;
+      const DRIFT_SPEED    = 0.08;
+      const PHASE_DURATION = 8;        // seconds per full cycle
+      const SWIRL_AMOUNT   = 0.4;      // lateral oscillation strength
+
+      /* ── State ── */
+      let W, H, dpr;
+      let scrollFactor = 0;            // 0–1 based on hero visibility
+      let hoverFactor  = 0;            // 0–1 based on mouse proximity
+      let mouseX = 0.5, mouseY = 0.5;  // normalised cursor within hero
+      let particles = [];
+      let raf;
+
+      /* ── Resize ── */
+      function resize() {
+        const rect = hero.getBoundingClientRect();
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = rect.width;
+        H = rect.height;
+        canvas.width  = W * dpr;
+        canvas.height = H * dpr;
+        canvas.style.width  = W + 'px';
+        canvas.style.height = H + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      /* ── Particle factory ── */
+      function createParticle(fresh) {
+        const cx = W * 0.5;
+        const cy = H * 0.55;
+        // Spawn in a wide elliptical region, concentrated toward centre
+        const angle  = Math.random() * Math.PI * 2;
+        const spread = 0.25 + Math.random() * 0.35;
+        return {
+          x:       cx + Math.cos(angle) * spread * W * 0.5,
+          y:       cy + Math.sin(angle) * spread * H * 0.4,
+          originX: 0,
+          originY: 0,
+          size:    1 + Math.random() * 2.5,
+          phase:   fresh ? Math.random() * PHASE_DURATION : 0,
+          speed:   0.6 + Math.random() * 0.8,
+          drift:   (Math.random() - 0.5) * 2,
+          swirlOffset: Math.random() * Math.PI * 2,
+          // colour: warm orange/amber spectrum
+          r: 200 + Math.floor(Math.random() * 42),
+          g: 70  + Math.floor(Math.random() * 50),
+          b: 10  + Math.floor(Math.random() * 25),
+        };
+      }
+
+      function init() {
+        particles = [];
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          const p = createParticle(true);
+          p.originX = p.x;
+          p.originY = p.y;
+          particles.push(p);
+        }
+      }
+
+      /* ── Phase envelope: maps 0–1 phase progress to opacity multiplier ──
+         Dormant(0–0.3) → Ignition(0.3–0.5) → Rise(0.5–0.8) → Dissolve(0.8–1) */
+      function envelope(t) {
+        if (t < 0.3)  return 0.15 + 0.15 * (t / 0.3);                       // dormant: very faint
+        if (t < 0.5)  return 0.3 + 0.7 * ((t - 0.3) / 0.2);                 // ignition: brighten
+        if (t < 0.8)  return 1.0 - 0.3 * ((t - 0.5) / 0.3);                 // rise: bright but fading
+        return 0.7 * (1 - (t - 0.8) / 0.2);                                  // dissolve: fade out
+      }
+
+      /* ── Rise multiplier: how much vertical lift at this phase ── */
+      function riseMul(t) {
+        if (t < 0.4) return 0;
+        if (t < 0.5) return (t - 0.4) / 0.1 * 0.3;
+        return 0.3 + 0.7 * Math.min(1, (t - 0.5) / 0.5);
+      }
+
+      /* ── Main loop ── */
+      let lastTime = 0;
+      function frame(now) {
+        raf = requestAnimationFrame(frame);
+        const dt = Math.min((now - lastTime) / 1000, 0.05);
+        lastTime = now;
+
+        ctx.clearRect(0, 0, W, H);
+
+        // Ambient centre glow (replaces the old CSS ::before radial)
+        const glowAlpha = (0.03 + hoverFactor * 0.015 + scrollFactor * 0.01) * GLOW_INTENSITY / 0.12;
+        const grad = ctx.createRadialGradient(W * 0.5, H * 0.45, 0, W * 0.5, H * 0.45, W * 0.42);
+        grad.addColorStop(0, `rgba(242,101,34,${glowAlpha})`);
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+
+        // Reactivity boost
+        const boost = 1 + scrollFactor * 0.3 + hoverFactor * 0.2;
+
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.phase += dt / PHASE_DURATION * p.speed;
+
+          // Reset cycle
+          if (p.phase >= 1) {
+            const np = createParticle(false);
+            np.originX = np.x;
+            np.originY = np.y;
+            Object.assign(p, np);
+            p.phase = 0;
+            continue;
+          }
+
+          const t = p.phase;
+          const env = envelope(t);
+          const rise = riseMul(t);
+
+          // Movement
+          const swirlX = Math.sin(now * 0.0004 + p.swirlOffset) * SWIRL_AMOUNT * p.drift;
+          p.x = p.originX + swirlX * rise * 40 + p.drift * DRIFT_SPEED * t * 60;
+          p.y = p.originY - rise * RISE_SPEED * p.speed * 220 * boost;
+
+          // Subtle mouse repel (very gentle)
+          const mxAbs = mouseX * W;
+          const myAbs = mouseY * H;
+          const dx = p.x - mxAbs;
+          const dy = p.y - myAbs;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 180 && dist > 0) {
+            const push = (1 - dist / 180) * 0.6 * hoverFactor;
+            p.x += (dx / dist) * push * 8;
+            p.y += (dy / dist) * push * 8;
+          }
+
+          // Draw
+          const alpha = env * BASE_OPACITY * boost;
+          if (alpha < 0.005) continue;
+
+          const s = p.size * (0.8 + env * 0.5);
+
+          // Outer glow (soft bloom)
+          if (env > 0.4) {
+            const glowR = s * 4;
+            const pg = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowR);
+            pg.addColorStop(0, `rgba(${p.r},${p.g},${p.b},${alpha * 0.25})`);
+            pg.addColorStop(1, 'transparent');
+            ctx.fillStyle = pg;
+            ctx.fillRect(p.x - glowR, p.y - glowR, glowR * 2, glowR * 2);
+          }
+
+          // Core dot
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, s, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${p.r},${p.g},${p.b},${alpha})`;
+          ctx.fill();
+        }
+      }
+
+      /* ── Scroll tracking ── */
+      function onScroll() {
+        const rect = hero.getBoundingClientRect();
+        const visible = Math.max(0, Math.min(1, 1 - rect.top / (rect.height * 0.6)));
+        scrollFactor = visible;
+      }
+
+      /* ── Hover tracking ── */
+      function onMouseMove(e) {
+        const rect = hero.getBoundingClientRect();
+        if (e.clientY < rect.top || e.clientY > rect.bottom ||
+            e.clientX < rect.left || e.clientX > rect.right) {
+          hoverFactor = Math.max(0, hoverFactor - 0.02);
+          return;
+        }
+        mouseX = (e.clientX - rect.left) / rect.width;
+        mouseY = (e.clientY - rect.top)  / rect.height;
+        hoverFactor = Math.min(1, hoverFactor + 0.05);
+      }
+
+      /* ── Reduced motion ── */
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      /* ── Boot ── */
+      resize();
+      init();
+      lastTime = performance.now();
+      raf = requestAnimationFrame(frame);
+
+      window.addEventListener('resize', () => { resize(); init(); }, { passive: true });
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('mousemove', onMouseMove, { passive: true });
+      onScroll();
+    })();
+  </script>
+</body>
+</html>
