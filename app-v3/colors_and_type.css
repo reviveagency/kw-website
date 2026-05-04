@@ -1,0 +1,256 @@
+/* ═══════════════════════════════════════════════════════════════
+   KONTROLWATER — Color & Type tokens
+   Lifted verbatim from reviveagency/kw-website/index.html.
+   Use these tokens in every surface. Don't invent new colors.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── FONT FACE — Satoshi, self-hosted from /fonts ─────────────── */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('fonts/Satoshi-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('fonts/Satoshi-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('fonts/Satoshi-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('fonts/Satoshi-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('fonts/Satoshi-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Satoshi';
+  src: url('fonts/Satoshi-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Variable cut — for reduced file size in production */
+@font-face {
+  font-family: 'Satoshi Variable';
+  src: url('fonts/Satoshi-Variable.woff2') format('woff2-variations');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* DM Mono — loaded from Google Fonts in host pages */
+/* <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" /> */
+
+:root {
+  /* ───── BASE PALETTE ───────────────────────────────────────── */
+  --kw-black:         #000000;      /* canonical background */
+  --kw-white:         #FFFFFF;      /* canonical foreground */
+
+  /* Layered whites — alpha on black. Never use opaque greys. */
+  --kw-gray-1:        rgba(255,255,255,0.72);   /* primary body */
+  --kw-gray-2:        rgba(255,255,255,0.42);   /* secondary body */
+  --kw-gray-3:        rgba(255,255,255,0.18);   /* labels, hints */
+  --kw-gray-4:        rgba(255,255,255,0.07);   /* deep disabled */
+
+  --kw-border:        rgba(255,255,255,0.10);   /* visible rules */
+  --kw-border-faint:  rgba(255,255,255,0.055);  /* cell dividers */
+  --kw-hover-tint:    rgba(255,255,255,0.03);   /* surface on hover */
+
+  /* ───── ACCENT — blue, CTAs only ───────────────────────────── */
+  --kw-blue:          #0F62FE;
+  --kw-blue-hover:    #0353E9;
+  --kw-blue-glow:     rgba(15,98,254,0.35);
+  --kw-blue-soft:     rgba(15,98,254,0.15);
+  --kw-blue-wash:     rgba(15,98,254,0.07);
+
+  /* ───── SEMANTIC FG / BG ───────────────────────────────────── */
+  --fg-1:             var(--kw-white);
+  --fg-2:             var(--kw-gray-1);
+  --fg-3:             var(--kw-gray-2);
+  --fg-4:             var(--kw-gray-3);
+  --bg-0:             var(--kw-black);
+  --bg-1:             var(--kw-hover-tint);
+  --accent:           var(--kw-blue);
+  --accent-hover:     var(--kw-blue-hover);
+
+  /* ───── TYPEFACES ──────────────────────────────────────────── */
+  --font-sans:        'Satoshi', system-ui, -apple-system, sans-serif;
+  --font-mono:        'DM Mono', 'SF Mono', 'Menlo', 'Courier New', monospace;
+
+  /* ───── TYPE SCALE — fluid clamps ──────────────────────────── */
+  --fs-hero:          clamp(48px, 6.5vw, 96px);  /* H1 — hero */
+  --fs-h2-lg:         clamp(36px, 4vw, 60px);    /* H2 — emphasis */
+  --fs-h2:            clamp(32px, 3.5vw, 52px);  /* H2 — standard */
+  --fs-h2-sm:         clamp(28px, 3vw, 44px);    /* H2 — sub */
+  --fs-h3-lg:         clamp(26px, 2.8vw, 38px);  /* H3 — panels */
+  --fs-h3:            22px;                       /* H3 — cards */
+  --fs-h4:            19px;                       /* H4 — projects */
+  --fs-metric-lg:     clamp(48px, 5.5vw, 80px);  /* huge numbers */
+  --fs-metric:        clamp(44px, 5vw, 72px);    /* standard numbers */
+  --fs-body-lg:       17px;                       /* lead body */
+  --fs-body:          16px;                       /* default body */
+  --fs-body-sm:       15px;                       /* dense body */
+  --fs-ui:            14px;                       /* buttons, table */
+  --fs-ui-sm:         13px;                       /* nav, captions */
+  --fs-label:         10px;                       /* mono labels */
+  --fs-label-xs:      9px;                        /* tiny captions */
+
+  /* ───── WEIGHTS ────────────────────────────────────────────── */
+  --fw-light:         300;
+  --fw-regular:       400;
+  --fw-medium:        500;
+  --fw-bold:          700;
+
+  /* ───── LINE HEIGHTS ───────────────────────────────────────── */
+  --lh-tight:         1.0;     /* hero */
+  --lh-heading:       1.1;     /* h2 */
+  --lh-sub:           1.15;    /* h3 */
+  --lh-body:          1.7;     /* body */
+  --lh-body-relaxed:  1.85;    /* lead */
+
+  /* ───── LETTER-SPACING ─────────────────────────────────────── */
+  --ls-hero:          -0.03em;
+  --ls-h2:            -0.025em;
+  --ls-h3:            -0.02em;
+  --ls-metric:        -0.04em;
+  --ls-body:          normal;
+  --ls-ui:            0.02em;
+  --ls-label:         0.14em;
+  --ls-label-lg:      0.18em;
+
+  /* ───── MOTION ─────────────────────────────────────────────── */
+  --ease-out:         cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io:          cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast:         0.2s;
+  --dur-med:          0.45s;
+  --dur-slow:         0.85s;
+  --dur-slower:       1.6s;
+
+  /* ───── LAYOUT ─────────────────────────────────────────────── */
+  --max-w:            1320px;
+  --pad-x:            72px;
+  --pad-x-sm:         24px;
+  --nav-h:            64px;
+
+  /* ───── SPACING — 4px base, dense ──────────────────────────── */
+  --sp-1:             4px;
+  --sp-2:             8px;
+  --sp-3:             12px;
+  --sp-4:             16px;
+  --sp-5:             20px;
+  --sp-6:             24px;
+  --sp-8:             32px;
+  --sp-10:            40px;
+  --sp-12:            48px;
+  --sp-14:            56px;
+  --sp-16:            64px;
+  --sp-20:            80px;
+  --sp-24:            96px;
+  --sp-28:            112px;
+  --sp-32:            140px;      /* section gutter */
+
+  /* ───── RADII — sparingly; mostly flat ─────────────────────── */
+  --r-0:              0px;        /* default — hard edges */
+  --r-xs:             2px;
+  --r-sm:             4px;        /* rare, for pill CTAs */
+  --r-md:             16px;       /* only viewport/stage frames */
+  --r-full:           999px;      /* dots, avatars */
+
+  /* ───── SHADOWS — only for elevated stages ─────────────────── */
+  --shadow-stage:     0 0 0 1px rgba(255,255,255,0.045),
+                      0 0 80px rgba(15,98,254,0.05),
+                      0 40px 120px rgba(0,0,0,0.6);
+  --shadow-card:      0 12px 40px rgba(0,0,0,0.45);
+  --glow-blue:        0 0 8px var(--kw-blue-glow);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SEMANTIC TYPOGRAPHY — apply directly, or use as mixin reference
+   ═══════════════════════════════════════════════════════════════ */
+
+.kw-h1, h1.kw {
+  font: var(--fw-bold) var(--fs-hero)/var(--lh-tight) var(--font-sans);
+  letter-spacing: var(--ls-hero);
+  color: var(--fg-1);
+}
+
+.kw-h2, h2.kw {
+  font: var(--fw-bold) var(--fs-h2)/var(--lh-heading) var(--font-sans);
+  letter-spacing: var(--ls-h2);
+  color: var(--fg-1);
+}
+
+.kw-h2-display, h2.kw-display {
+  font: var(--fw-medium) var(--fs-h2-lg)/var(--lh-heading) var(--font-sans);
+  letter-spacing: var(--ls-h2);
+  color: var(--fg-1);
+}
+
+.kw-h3, h3.kw {
+  font: var(--fw-medium) var(--fs-h3-lg)/var(--lh-sub) var(--font-sans);
+  letter-spacing: var(--ls-h3);
+  color: var(--fg-1);
+}
+
+.kw-body, p.kw {
+  font: var(--fw-light) var(--fs-body)/var(--lh-body-relaxed) var(--font-sans);
+  color: var(--fg-3);
+}
+
+.kw-body-primary {
+  font: var(--fw-light) var(--fs-body)/var(--lh-body) var(--font-sans);
+  color: var(--fg-2);
+}
+
+.kw-body-sm {
+  font: var(--fw-light) var(--fs-body-sm)/var(--lh-body) var(--font-sans);
+  color: var(--fg-3);
+}
+
+/* Mono label — the signature utility. UPPERCASE, tracked, thin. */
+.kw-label {
+  font: var(--fw-regular) var(--fs-label)/1 var(--font-mono);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--fg-4);
+}
+
+.kw-label-accent {
+  font: var(--fw-regular) var(--fs-label)/1 var(--font-mono);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Big number — tabular, hairline-tight tracking */
+.kw-metric {
+  font: var(--fw-bold) var(--fs-metric-lg)/1 var(--font-sans);
+  font-weight: 600;
+  letter-spacing: var(--ls-metric);
+  color: var(--fg-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.kw-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}

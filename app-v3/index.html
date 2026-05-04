@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+<meta charset="utf-8"/>
+<title>Kontrolwater · Mobile App v3</title>
+<meta name="viewport" content="width=1280"/>
+<link rel="stylesheet" href="ui_kits/mobile-app/app-v2.css"/>
+<style>
+  /* Page chrome — light grey. Phones stay dark (brand). */
+  html, body { margin:0; padding:0; background:#EDEFF2; color:#0A0A0A; font-family:'Satoshi', system-ui, sans-serif; }
+  body { min-height:100vh; overflow-x:hidden; }
+
+  .stage {
+    min-height:100vh; padding:80px 56px 120px; background:#EDEFF2;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .stage-head {
+    width:100%; max-width:1280px;
+    display:grid; grid-template-columns:1fr auto; gap:32px; align-items:end;
+    margin-bottom:48px; padding-bottom:28px;
+    border-bottom:1px solid rgba(0,0,0,0.1);
+  }
+  .stage-eyebrow {
+    font:400 10px 'DM Mono', monospace;
+    letter-spacing:0.18em; text-transform:uppercase;
+    color:#0F62FE; margin-bottom:12px;
+  }
+  .stage-title {
+    font:700 clamp(36px, 5vw, 56px)/1.05 'Satoshi', sans-serif;
+    letter-spacing:-0.025em; text-transform:uppercase;
+    color:#0A0A0A; margin:0;
+  }
+  .stage-sub {
+    font:300 16px/1.6 'Satoshi', sans-serif;
+    color:rgba(10,10,10,0.6);
+    margin:12px 0 0; max-width:620px;
+  }
+  .stage-meta {
+    font:400 10px 'DM Mono', monospace;
+    letter-spacing:0.16em; text-transform:uppercase;
+    color:rgba(10,10,10,0.45);
+    text-align:right; line-height:1.8;
+  }
+
+  /* Print page setup — hides hero/tweaks, breaks sections cleanly. */
+  @page { size: A3 landscape; margin: 16mm; }
+  @media print {
+    .stage { padding: 0 !important; }
+    .stage-head { page-break-after: always; break-after: page; min-height: 60vh; }
+    .section-row { page-break-before: always; break-before: page; margin-top: 0 !important; }
+    .phone-pair { page-break-inside: avoid; break-inside: avoid; padding: 24px 0; }
+    .phone-pair-cta { display: none !important; }
+    .footer { page-break-before: always; break-before: page; }
+    body, html, .stage { background: #EDEFF2 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  /* Hero — single, clickable. No twin block, no marketing tagline. */
+  .hero {
+    width:100%; max-width:1280px;
+    display:grid; grid-template-columns:1fr auto; gap:64px; align-items:center;
+    padding:8px 0 64px;
+  }
+  .hero-meta {
+    font:400 10px 'DM Mono', monospace;
+    letter-spacing:0.18em; text-transform:uppercase;
+    color:#0F62FE; margin-bottom:14px;
+  }
+  .hero h2 {
+    font:600 clamp(32px, 4vw, 48px)/1.05 'Satoshi', sans-serif;
+    letter-spacing:-0.02em; text-transform:uppercase;
+    color:#0A0A0A; margin:0 0 16px;
+  }
+  .hero p {
+    font:300 15px/1.6 'Satoshi', sans-serif;
+    color:rgba(10,10,10,0.6); max-width:480px;
+  }
+  .hero-cta {
+    margin-top:24px;
+    display:inline-flex; align-items:center; gap:12px;
+    padding:14px 22px;
+    background:#0F62FE; color:#fff; border:0;
+    font:500 11px 'DM Mono', monospace;
+    letter-spacing:0.16em; text-transform:uppercase;
+    cursor:pointer;
+  }
+  .hero-cta:hover { background:#0353E9; }
+  .hero-cta.ghost { background:transparent; border:1px solid rgba(10,10,10,0.2); color:#0A0A0A; }
+  .hero-cta.ghost:hover { background:rgba(10,10,10,0.04); border-color:rgba(10,10,10,0.4); }
+
+  .section-row {
+    width:100%; max-width:1280px;
+    display:grid; grid-template-columns:1fr auto; gap:32px; align-items:end;
+    margin:88px 0 32px;
+    padding-bottom:18px;
+    border-bottom:1px solid rgba(0,0,0,0.1);
+  }
+  .section-row h2 {
+    font:500 28px/1.05 'Satoshi', sans-serif;
+    letter-spacing:-0.02em; text-transform:uppercase;
+    color:#0A0A0A; margin:0;
+  }
+  .section-row .one-liner {
+    font:300 14px/1.5 'Satoshi', sans-serif;
+    color:rgba(10,10,10,0.6);
+    margin:8px 0 0; max-width:620px;
+  }
+
+  /* Side-by-side pairs: phone (left) | annotated copy (right). Always. */
+  .phone-pairs {
+    width:100%; max-width:1280px;
+    display:flex; flex-direction:column; gap:80px;
+  }
+  .phone-pair {
+    display:grid; grid-template-columns:auto 1fr; gap:64px; align-items:center;
+  }
+  .phone-pair-copy { max-width:520px; padding:8px 0; }
+  .phone-pair-num {
+    font:400 10px 'DM Mono', monospace;
+    letter-spacing:0.18em; color:#0F62FE; text-transform:uppercase;
+    margin-bottom:14px;
+    display:flex; align-items:center; gap:14px;
+  }
+  .phone-pair-num::after {
+    content:''; flex:1; height:1px; background:rgba(0,0,0,0.12);
+  }
+  .phone-pair-title {
+    font:600 28px/1.1 'Satoshi', sans-serif;
+    letter-spacing:-0.02em; text-transform:uppercase;
+    color:#0A0A0A; margin:0 0 16px;
+  }
+  .phone-pair-body {
+    font:300 15px/1.65 'Satoshi', sans-serif;
+    color:rgba(10,10,10,0.65);
+    margin:0 0 24px;
+  }
+  .phone-pair-list {
+    list-style:none; padding:0; margin:24px 0 0;
+    display:flex; flex-direction:column; gap:12px;
+  }
+  .phone-pair-list li {
+    display:grid; grid-template-columns:120px 1fr; gap:18px; align-items:baseline;
+    padding-bottom:12px;
+    border-bottom:1px solid rgba(0,0,0,0.08);
+  }
+  .phone-pair-list li:last-child { border-bottom:0; }
+  .phone-pair-list .k {
+    font:500 10px 'DM Mono', monospace;
+    letter-spacing:0.16em; text-transform:uppercase;
+    color:rgba(10,10,10,0.5);
+  }
+  .phone-pair-list .v {
+    font:400 13px/1.5 'Satoshi', sans-serif;
+    color:rgba(10,10,10,0.85);
+  }
+  .phone-pair-cta {
+    margin-top:20px;
+    display:inline-flex; align-items:center; gap:10px;
+    padding:10px 16px;
+    background:transparent; color:#0F62FE; border:1px solid rgba(15,98,254,0.4);
+    font:500 10px 'DM Mono', monospace;
+    letter-spacing:0.16em; text-transform:uppercase;
+    cursor:pointer; transition:all 0.15s;
+  }
+  .phone-pair-cta:hover { background:rgba(15,98,254,0.08); border-color:#0F62FE; }
+
+  .phone-clickable { cursor:pointer; transition:transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+  .phone-clickable:hover { transform:translateY(-4px); }
+
+  .footer {
+    width:100%; max-width:1280px;
+    margin-top:96px;
+    padding-top:32px;
+    border-top:1px solid rgba(0,0,0,0.1);
+    display:flex; justify-content:space-between;
+    font:400 10px 'DM Mono', monospace;
+    letter-spacing:0.16em; text-transform:uppercase;
+    color:rgba(10,10,10,0.45);
+  }
+
+  .kw2-host { position:absolute; inset:0; }
+</style>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<script type="text/babel" src="ui_kits/mobile-app/tweaks-panel.jsx"></script>
+<script type="text/babel" src="ui_kits/mobile-app/kw-shell.jsx"></script>
+<script type="text/babel" src="ui_kits/mobile-app/kw3-screens.jsx"></script>
+
+<div id="root"></div>
+
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "startScreen": "home"
+}/*EDITMODE-END*/;
+
+function Screen3({ id, go, autoAdvance = false }) {
+  switch (id) {
+    case 'welcome':  return <Sc3Welcome go={go} autoAdvance={autoAdvance}/>;
+    case 'login':    return <Sc3Login go={go}/>;
+    case 'home':     return <Sc3Home go={go}/>;
+    case 'pool':     return <Sc3Pool go={go}/>;
+    case 'data':     return <Sc3Data go={go}/>;
+    case 'alerts':   return <Sc3Alerts go={go}/>;
+    case 'alert':    return <Sc3Alert go={go}/>;
+    case 'history':  return <Sc3History go={go}/>;
+    case 'schedule': return <Sc3Schedule go={go}/>;
+    case 'temp':     return <Sc3Temp go={go}/>;
+    case 'account':  return <Sc3Account go={go}/>;
+    default:         return <Sc3Home go={go}/>;
+  }
+}
+
+function Bezeled({ children }) {
+  return (
+    <KWBezel>
+      <div className="kw2 kw2-host">{children}</div>
+    </KWBezel>
+  );
+}
+
+function ClickablePhone({ initial = 'home' }) {
+  const [route, setRoute] = React.useState(initial);
+  React.useEffect(() => { setRoute(initial); }, [initial]);
+  return (
+    <Bezeled>
+      <Screen3 id={route} go={(id) => setRoute(id)} autoAdvance={true} />
+    </Bezeled>
+  );
+}
+
+function ShowroomPhone({ id, onPick }) {
+  const noop = () => {};
+  return (
+    <div className="phone-clickable" onClick={() => onPick(id)}>
+      <Bezeled>
+        <Screen3 id={id} go={noop}/>
+      </Bezeled>
+    </div>
+  );
+}
+
+const SECTIONS = [
+  {
+    label: 'ONBOARDING',
+    title: 'IN.',
+    sub: 'A two-second handshake with the controller, then a single sign-in.',
+    screens: [
+      {
+        num: '01', id: 'welcome', title: 'WELCOME · CONNECTING',
+        body: 'Branded splash that holds for the BLE handshake with the KW1100. The pulsing dashed line is the only motion — confirms the controller is reachable before any UI is shown.',
+        spec: [
+          ['DURATION',  '~2 seconds. Auto-advances to Sign in once the handshake completes.'],
+          ['MARK',      'Full Kontrolwater wordmark, white on black, centred.'],
+          ['STATUS',    'CONNECTING TO KW1100 — mono caption, no spinner, no copy beyond.'],
+        ],
+      },
+      {
+        num: '02', id: 'login', title: 'SIGN IN',
+        body: 'No tour, no welcome carousel. After the handshake, the app opens here. Two fields, one switch, one button.',
+        spec: [
+          ['LAYOUT',   'Hairline-bordered fields. Mono labels above.'],
+          ['STATE',    'Remember-me defaults on. No social logins, no biometric prompt up-front.'],
+          ['CTA',      'SIGN IN — primary blue. Forgot Password is mono link, not a button.'],
+        ],
+      },
+    ],
+  },
+  {
+    label: 'CONTROL',
+    title: 'A SWITCH FOR EVERY FUNCTION.',
+    sub: 'Toggle deck on Home. Drill into Pool for chemistry, filtration mode and temperature.',
+    screens: [
+      {
+        num: '03', id: 'home', title: 'HOME · QUICK ACTIONS',
+        body: 'A two-line system strip up top — pool temp, filter mode — then a six-tile toggle deck. The whole product, two thumbs.',
+        spec: [
+          ['STRIP',     'Live blue dot pulses on the heating row. Idle filter is white at 18%.'],
+          ['TILES',     '2×3 grid · 1px hairlines · active tile gets a 2px blue rail at the left edge.'],
+          ['SHORTCUTS', 'Pool and Irrigation Schedule below the deck. No reassurance copy.'],
+        ],
+      },
+      {
+        num: '04', id: 'pool', title: 'POOL · CONTROL',
+        body: 'Chemistry, filtration mode, temperature — three sections, no scrolling required to make a decision. Drill DATA from the section header to see every parameter.',
+        spec: [
+          ['QUALITY',     'Hero score 98/100 + three live bars: pH · ORP · Free Cl.'],
+          ['FILTRATION',  'Segmented control: ECO · MEDIUM · BOOST. Subline reads RPM and hours.'],
+          ['TEMPERATURE', 'Big numeric, target chip, hairline progress bar. Tap to open the dialog.'],
+        ],
+      },
+      {
+        num: '05', id: 'temp', title: 'TEMPERATURE · DIALOG',
+        body: 'A radial gauge to show the proportion of range, ± buttons for the change, one CONFIRM. No sliders to drag, no decimals to tune.',
+        spec: [
+          ['GAUGE', '70 px radius, 2 px stroke, blue glow at 40% opacity.'],
+          ['STEP',  '1° increments. Range 18–35°C. Sub-label confirms STEP · 1°.'],
+          ['CTA',   'CONFIRM commits and returns to Pool. No ghost cancel — system back is enough.'],
+        ],
+      },
+      {
+        num: '06', id: 'schedule', title: 'SCHEDULE · ZONE 1',
+        body: 'Time slots stacked vertically; each owns its weekday chips. Soil-sensor override sits inline as a row toggle. No calendar UI, no recurrence dropdowns.',
+        spec: [
+          ['SLOT',     'Time + duration on one line. Inline ✕ removes the slot.'],
+          ['DAYS',     'M T W T F S S as 30 px squares. Active = filled blue.'],
+          ['OVERRIDE', 'Soil sensor toggle skips the run if the bed is already moist.'],
+        ],
+      },
+    ],
+  },
+  {
+    label: 'DATA',
+    title: 'NUMBERS, NOT NARRATIVE.',
+    sub: 'Live readings as a tabular grid. Alerts as an inbox. History as a log. No copy that needs reading.',
+    screens: [
+      {
+        num: '07', id: 'data', title: 'READINGS · LIVE GRID',
+        body: 'Eight parameters in one scroll. Each row pairs the value with its target range, a unit caption and a hairline level bar. Designed to be scanned, not read.',
+        spec: [
+          ['ROWS',   'pH · ORP · Free Cl · Temp · Salt · TDS · Conductivity · Flow.'],
+          ['BAR',    '2 px hairline, blue fill, position reflects value within the target range.'],
+          ['HEADER', 'LIVE · 09:41 timestamp + 24H switch to enter the trend view.'],
+        ],
+      },
+      {
+        num: '08', id: 'alerts', title: 'ALERTS · INBOX',
+        body: 'Open and resolved alerts in one tabular list. No icons of warning bells, no apologetic copy. Time, title, one-line cause. Tap to drill in.',
+        spec: [
+          ['STATUS DOT', 'Blue with glow = open. White at 18% = resolved.'],
+          ['ROW',        'Mono title (uppercase) + sentence-case sub. Time stamp right-aligned.'],
+          ['CLEAR ALL',  'Mono link in the section header — no destructive confirmation modal.'],
+        ],
+      },
+      {
+        num: '09', id: 'alert', title: 'ALERT · DETAIL',
+        body: 'Why the alert fired, what to do, a 24-hour trend, two CTAs. Reading, target, range, suggested dose — all as a single hairline-bordered table.',
+        spec: [
+          ['FACTS',  'Reading 7.9 · Target 7.4 · Range 7.2–7.6 · Suggested pH minus 180 ml.'],
+          ['TREND',  'Single-stroke 24 h sparkline. End-point marker fixed at NOW.'],
+          ['CTAS',   'RUN DOSE NOW (blue) and DISMISS (ghost). No third option.'],
+        ],
+      },
+      {
+        num: '10', id: 'history', title: 'HISTORY · LOG',
+        body: 'Day buckets — TODAY, YESTERDAY, weekday + date for older. Time on the left, action in the middle, value on the right. Nothing else.',
+        spec: [
+          ['BUCKETS', 'Section header doubles as the day label and an event count.'],
+          ['ROW',     'Three columns: time (mono) · action (sans) · detail (mono). One line each.'],
+          ['SCOPE',   'Pulled from controller events — dose, filter cycle, irrigation, firmware.'],
+        ],
+      },
+    ],
+  },
+  {
+    label: 'ACCOUNT',
+    title: 'YOU. YOUR SITES.',
+    sub: 'Site chips, profile, preferences. No marketing, no tour.',
+    screens: [
+      {
+        num: '11', id: 'account', title: 'ACCOUNT · MULTI-SITE',
+        body: 'Multi-site is the model — pick the active installation from a chip row, the rest of the app reflects that scope. Profile, units, firmware live below as plain rows.',
+        spec: [
+          ['SITES',       'Chip row. Active chip is blue outline, blue label.'],
+          ['PROFILE',     'Avatar + name + email. Single edit affordance, bottom-right of the avatar.'],
+          ['PREFERENCES', 'Notifications · Units · Firmware. Switches and right-aligned values.'],
+        ],
+      },
+    ],
+  },
+];
+
+function App() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const heroRef = React.useRef(null);
+  const [heroId, setHeroId] = React.useState(t.startScreen || 'home');
+
+  React.useEffect(() => { setHeroId(t.startScreen || 'home'); }, [t.startScreen]);
+
+  const pick = (id) => {
+    setHeroId(id);
+    if (heroRef.current) heroRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const totalScreens = SECTIONS.reduce((s, x) => s + x.screens.length, 0);
+
+  return (
+    <div className="stage">
+      <header className="stage-head">
+        <div>
+          <div className="stage-eyebrow">UI KIT · MOBILE APP · v3 · LEAN</div>
+          <h1 className="stage-title">SWITCHES.<br/>NUMBERS.<br/>NOTHING ELSE.</h1>
+          <p className="stage-sub">v3 trims v2 to the bone and brings back the essential data surfaces from v1 — readings grid, alerts inbox, activity log — in the same hardware-first grammar. {totalScreens} screens, 4 tabs.</p>
+        </div>
+        <div className="stage-meta">
+          KW · 2026.05<br/>
+          v3 · LEAN<br/>
+          IPHONE 15 · 390 × 844
+        </div>
+      </header>
+
+      {/* HERO removed for PDF */}
+
+      {SECTIONS.map((sec, i) => (
+        <React.Fragment key={i}>
+          <div className="section-row" data-screen-label={sec.label}>
+            <div>
+              <div className="stage-eyebrow" style={{ marginBottom:14 }}>{sec.label}</div>
+              <h2>{sec.title}</h2>
+              <p className="one-liner">{sec.sub}</p>
+            </div>
+            <div className="stage-meta">{sec.screens.length} · SCREEN{sec.screens.length === 1 ? '' : 'S'}</div>
+          </div>
+          <div className="phone-pairs">
+            {sec.screens.map((sc) => {
+              return (
+                <div className="phone-pair" key={sc.num + sc.id}>
+                  <div className="phone-pair-phone">
+                    <ShowroomPhone id={sc.id} onPick={pick}/>
+                  </div>
+                  <div className="phone-pair-copy">
+                    <div className="phone-pair-num">{sc.num} · {sc.title}</div>
+                    <h3 className="phone-pair-title">{sc.title.split(' · ')[0]}</h3>
+                    <p className="phone-pair-body">{sc.body}</p>
+                    <ul className="phone-pair-list">
+                      {sc.spec.map(([k, v], n) => (
+                        <li key={n}><span className="k">{k}</span><span className="v">{v}</span></li>
+                      ))}
+                    </ul>
+                    <button className="phone-pair-cta" onClick={() => pick(sc.id)}>OPEN IN PROTOTYPE →</button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </React.Fragment>
+      ))}
+
+      <div className="footer">
+        <span>KONTROLWATER · MOBILE APP · v3 · LEAN</span>
+        <span>v3 · 04 MAY 2026</span>
+      </div>
+
+      {/* Tweaks panel removed for PDF */}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+</body>
+</html>
